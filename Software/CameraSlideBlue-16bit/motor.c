@@ -7,6 +7,9 @@
 
 #include "motor.h"
 
+unsigned int motor_speed;           // interval between steps in ms
+unsigned int motor_stepsPerRev;     // steps per motor revolution
+
 extern timeObj tReset;
 timeObj tPrev;
 
@@ -14,7 +17,7 @@ unsigned char moveSingleStep(unsigned char dir) {
     timeObj tCurr = TMR32_getTime();
 
     // check if sufficient time has passed
-    if(TMR32_timeDiff(tCurr, tPrev, MSEC) >= STEP_INTERVAL) {
+    if(TMR32_timeDiff(tCurr, tPrev, MSEC) >= motor_speed) {
         if(MOTOR_1_PIN == HI) {
             if(dir == HOME) {
                 MOTOR_2_PIN = HI;
@@ -55,7 +58,7 @@ unsigned char moveSingleStep(unsigned char dir) {
     return 0;
 }
 
-void motor_init(void) {
+void motor_init(unsigned int spd, unsigned int stepsPerRev) {
     // set motor initial state
     MOTOR_1_PIN = HI;
     MOTOR_2_PIN = LO;
@@ -66,4 +69,6 @@ void motor_init(void) {
     MOTOR_EN_PIN = HI;
 
     tPrev = tReset;
+    motor_stepsPerRev = stepsPerRev;
+    motor_speed = spd;
 }

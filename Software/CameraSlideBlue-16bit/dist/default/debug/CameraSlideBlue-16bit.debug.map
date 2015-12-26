@@ -6,7 +6,7 @@ Tool Name:
 Command:
   -p24FJ32MC102 \
   -o \
-  dist/default/production/CameraSlideBlue-16bit.production.elf \
+  dist/default/debug/CameraSlideBlue-16bit.debug.elf \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/.. \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/PIC24E \
@@ -21,15 +21,17 @@ Command:
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33E/gld \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/dsPIC33F \
   -Lc:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../support/dsPIC33F/gld \
-  build/default/production/TMR32.o \
-  build/default/production/inputs.o \
-  build/default/production/interrupts.o \
-  build/default/production/motor.o \
-  build/default/production/statemachines.o \
-  build/default/production/cameraslide16blue.o \
-  build/default/production/UART1.o \
-  build/default/production/ADC.o \
+  build/default/debug/TMR32.o \
+  build/default/debug/inputs.o \
+  build/default/debug/interrupts.o \
+  build/default/debug/motor.o \
+  build/default/debug/statemachines.o \
+  build/default/debug/cameraslide16blue.o \
+  build/default/debug/UART1.o \
   --defsym=__MPLAB_BUILD=1 \
+  --defsym=__MPLAB_DEBUG=1 \
+  --defsym=__DEBUG=1 \
+  --defsym=__MPLAB_DEBUGGER_SIMULATOR=1 \
   -Tp24FJ32MC102.gld.00 \
   --stack=16 \
   --check-sections \
@@ -42,7 +44,7 @@ Command:
   --stackguard=16 \
   --no-force-link \
   --smart-io \
-  -Map=dist/default/production/CameraSlideBlue-16bit.production.map \
+  -Map=dist/default/debug/CameraSlideBlue-16bit.debug.map \
   --report-mem \
   -start-group \
   --library=pic30-elf \
@@ -57,13 +59,13 @@ c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o) (__data_init_standard)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
-                              build/default/production/statemachines.o (___divsf3)
+                              build/default/debug/statemachines.o (___divsf3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
-                              build/default/production/TMR32.o (___divsi3)
+                              build/default/debug/TMR32.o (___divsi3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
-                              build/default/production/TMR32.o (___fixunssfsi)
+                              build/default/debug/TMR32.o (___fixunssfsi)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
-                              build/default/production/TMR32.o (___floatunsisf)
+                              build/default/debug/TMR32.o (___floatunsisf)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo) (__fpack)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
@@ -73,9 +75,9 @@ c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo) (__fPropagateNaN)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
-                              build/default/production/statemachines.o (___mulsf3)
+                              build/default/debug/statemachines.o (___mulsf3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
-                              build/default/production/TMR32.o (___udivsi3)
+                              build/default/debug/TMR32.o (___udivsi3)
 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
                               c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo) (___floatundisf)
 
@@ -85,10 +87,11 @@ Program Memory  [Origin = 0x200, Length = 0x55fc]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x306           0x489  (1161)
-.text                        0x506               0xd5e          0x140d  (5133)
-.dinit                      0x1264                0x38            0x54  (84)
+.const                       0x506                 0xa             0xf  (15)
+.text                        0x510               0xcf4          0x136e  (4974)
+.dinit                      0x1204                0x32            0x4b  (75)
 
-                     Total program memory used (bytes):         0x18ea  (6378) 19%
+                     Total program memory used (bytes):         0x1851  (6225) 18%
 
 
 Data Memory  [Origin = 0x800, Length = 0x400]
@@ -99,9 +102,8 @@ section                    address      alignment gaps    total length  (dec)
 .ndata                       0x8de                   0             0x6  (6)
 .nbss                        0x8e4                   0             0x2  (2)
 .ndata                       0x8e6                   0             0x2  (2)
-.nbss                        0x8e8                   0             0x2  (2)
 
-                        Total data memory used (bytes):           0xea  (234) 22%
+                        Total data memory used (bytes):           0xe8  (232) 22%
 
 
 Dynamic Memory Usage
@@ -109,9 +111,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x8ea                               0x316  (790)
+stack                        0x8e8                               0x318  (792)
 
-                        Maximum dynamic memory (bytes):          0x316  (790)
+                        Maximum dynamic memory (bytes):          0x318  (792)
 
 
 External Symbols in Data Memory (by address):
@@ -160,11 +162,9 @@ External Symbols in Data Memory (by address):
                     0x08de                  _tReset
                     0x08e4                  _TMR32_overflows
                     0x08e6                  _resetCmd
-                    0x08e8                  _ADC_flag
 
 External Symbols in Data Memory (by name):
 
-                    0x08e8                  _ADC_flag
                     0x08e4                  _TMR32_overflows
                     0x082b                  _UART1_rxBuffer
                     0x0853                  _UART1_rxBufferCount
@@ -214,8 +214,8 @@ External Symbols in Program Memory (by address):
 
                   0x000200                  __resetPRI
                   0x00022c                  __psv_init
-                  0x00023c                  __data_init_standard
                   0x00023c                  __data_init
+                  0x00023c                  __data_init_standard
                   0x00029a                  __DefaultInterrupt
                   0x00029e                  ___divsf3
                   0x000322                  ___divsi3
@@ -230,57 +230,49 @@ External Symbols in Program Memory (by address):
                   0x000420                  ___mulsf3
                   0x000488                  ___udivsi3
                   0x0004a8                  ___floatundisf
-                  0x000506                  _SM_mainStateMachine
-                  0x0005bc                  _SM_runStateMachine
-                  0x0007b0                  _parseNextCommand
-                  0x00098a                  _readCommand
-                  0x000a22                  _sendCommand
-                  0x000a42                  _checkCommandBuffer
-                  0x000aee                  _SM_init
-                  0x000b8a                  _UART1_init
-                  0x000bd6                  _UART1_writeLine
-                  0x000c06                  _UART1_writeChar
-                  0x000c44                  _UART1_readLine
-                  0x000cc4                  _UART1_update
-                  0x000d80                  _TMR32_timeDiff
-                  0x000e96                  _TMR32_getTime
-                  0x000eda                  _TMR32_init
-                  0x000f06                  _main
-                  0x000f8a                  _main_init
-                  0x001010                  _moveSingleStep
-                  0x0010b6                  _motor_init
-                  0x0010de                  _checkInputState
-                  0x00113e                  _inputs_init
-                  0x00117a                  _interrupts_init
-                  0x001182                  __T2Interrupt
-                  0x0011a6                  __U1TXInterrupt
-                  0x0011ba                  __U1RXInterrupt
-                  0x0011da                  __AD1Interrup
-                  0x0011fa                  _ADC_init
-                  0x00124e                  _ADC_newValue
-                  0x00125a                  _ADC_rawValue
+                  0x000510                  _SM_mainStateMachine
+                  0x0005c6                  _SM_runStateMachine
+                  0x0007ba                  _parseNextCommand
+                  0x000994                  _readCommand
+                  0x000a2c                  _sendCommand
+                  0x000a4c                  _checkCommandBuffer
+                  0x000af8                  _SM_init
+                  0x000b94                  _UART1_init
+                  0x000be0                  _UART1_writeLine
+                  0x000c10                  _UART1_writeChar
+                  0x000c4e                  _UART1_readLine
+                  0x000cce                  _UART1_update
+                  0x000d8a                  _TMR32_timeDiff
+                  0x000ea0                  _TMR32_getTime
+                  0x000ee4                  _TMR32_init
+                  0x000f10                  _main
+                  0x000fb4                  _main_init
+                  0x00103a                  _moveSingleStep
+                  0x0010e0                  _motor_init
+                  0x001108                  _checkInputState
+                  0x001168                  _inputs_init
+                  0x0011a4                  _interrupts_init
+                  0x0011ac                  __T2Interrupt
+                  0x0011d0                  __U1TXInterrupt
+                  0x0011e4                  __U1RXInterrupt
 
 External Symbols in Program Memory (by name):
 
-                  0x0011fa                  _ADC_init
-                  0x00124e                  _ADC_newValue
-                  0x00125a                  _ADC_rawValue
-                  0x000aee                  _SM_init
-                  0x000506                  _SM_mainStateMachine
-                  0x0005bc                  _SM_runStateMachine
-                  0x000e96                  _TMR32_getTime
-                  0x000eda                  _TMR32_init
-                  0x000d80                  _TMR32_timeDiff
-                  0x000b8a                  _UART1_init
-                  0x000c44                  _UART1_readLine
-                  0x000cc4                  _UART1_update
-                  0x000c06                  _UART1_writeChar
-                  0x000bd6                  _UART1_writeLine
-                  0x0011da                  __AD1Interrup
+                  0x000af8                  _SM_init
+                  0x000510                  _SM_mainStateMachine
+                  0x0005c6                  _SM_runStateMachine
+                  0x000ea0                  _TMR32_getTime
+                  0x000ee4                  _TMR32_init
+                  0x000d8a                  _TMR32_timeDiff
+                  0x000b94                  _UART1_init
+                  0x000c4e                  _UART1_readLine
+                  0x000cce                  _UART1_update
+                  0x000c10                  _UART1_writeChar
+                  0x000be0                  _UART1_writeLine
                   0x00029a                  __DefaultInterrupt
-                  0x001182                  __T2Interrupt
-                  0x0011ba                  __U1RXInterrupt
-                  0x0011a6                  __U1TXInterrupt
+                  0x0011ac                  __T2Interrupt
+                  0x0011e4                  __U1RXInterrupt
+                  0x0011d0                  __U1TXInterrupt
                   0x00029e                  ___divsf3
                   0x000322                  ___divsi3
                   0x000340                  ___fixunssfsi
@@ -298,17 +290,17 @@ External Symbols in Program Memory (by name):
                   0x0003f0                  __funpack2
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
-                  0x000a42                  _checkCommandBuffer
-                  0x0010de                  _checkInputState
-                  0x00113e                  _inputs_init
-                  0x00117a                  _interrupts_init
-                  0x000f06                  _main
-                  0x000f8a                  _main_init
-                  0x0010b6                  _motor_init
-                  0x001010                  _moveSingleStep
-                  0x0007b0                  _parseNextCommand
-                  0x00098a                  _readCommand
-                  0x000a22                  _sendCommand
+                  0x000a4c                  _checkCommandBuffer
+                  0x001108                  _checkInputState
+                  0x001168                  _inputs_init
+                  0x0011a4                  _interrupts_init
+                  0x000f10                  _main
+                  0x000fb4                  _main_init
+                  0x0010e0                  _motor_init
+                  0x00103a                  _moveSingleStep
+                  0x0007ba                  _parseNextCommand
+                  0x000994                  _readCommand
+                  0x000a2c                  _sendCommand
 
 Memory Configuration
 
@@ -325,15 +317,17 @@ CONFIG1          0x0057fe           0x000002
 
 Linker script and memory map
 
-LOAD build/default/production/TMR32.o
-LOAD build/default/production/inputs.o
-LOAD build/default/production/interrupts.o
-LOAD build/default/production/motor.o
-LOAD build/default/production/statemachines.o
-LOAD build/default/production/cameraslide16blue.o
-LOAD build/default/production/UART1.o
-LOAD build/default/production/ADC.o
+LOAD build/default/debug/TMR32.o
+LOAD build/default/debug/inputs.o
+LOAD build/default/debug/interrupts.o
+LOAD build/default/debug/motor.o
+LOAD build/default/debug/statemachines.o
+LOAD build/default/debug/cameraslide16blue.o
+LOAD build/default/debug/UART1.o
                     0x0001                  __MPLAB_BUILD = 0x1
+                    0x0001                  __MPLAB_DEBUG = 0x1
+                    0x0001                  __DEBUG = 0x1
+                    0x0001                  __MPLAB_DEBUGGER_SIMULATOR = 0x1
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib/PIC24F\libpPIC24Fxxx-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libfx-elf.a
                     0x57fc                  __CONFIG2 = 0x57fc
@@ -409,70 +403,65 @@ usercode
 
 __CONFIG2         0x0057fc          0x2
  *(__CONFIG2.sec*)
- __CONFIG2.sec    0x0057fc          0x2 build/default/production/cameraslide16blue.o
+ __CONFIG2.sec    0x0057fc          0x2 build/default/debug/cameraslide16blue.o
 
 __CONFIG1         0x0057fe          0x2
  *(__CONFIG1.sec*)
- __CONFIG1.sec    0x0057fe          0x2 build/default/production/cameraslide16blue.o
+ __CONFIG1.sec    0x0057fe          0x2 build/default/debug/cameraslide16blue.o
 
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x4913
+.debug_info       0x000000       0x3c13
  *(.debug_info)
- .debug_info      0x000000        0x80e build/default/production/TMR32.o
- .debug_info      0x00080e        0x2d5 build/default/production/inputs.o
- .debug_info      0x000ae3        0x4e8 build/default/production/interrupts.o
- .debug_info      0x000fcb        0x3f6 build/default/production/motor.o
- .debug_info      0x0013c1        0x8d6 build/default/production/statemachines.o
- .debug_info      0x001c97       0x12ac build/default/production/cameraslide16blue.o
- .debug_info      0x002f43        0xcca build/default/production/UART1.o
- .debug_info      0x003c0d        0xd06 build/default/production/ADC.o
+ .debug_info      0x000000        0x80e build/default/debug/TMR32.o
+ .debug_info      0x00080e        0x2d5 build/default/debug/inputs.o
+ .debug_info      0x000ae3        0x4b2 build/default/debug/interrupts.o
+ .debug_info      0x000f95        0x3f6 build/default/debug/motor.o
+ .debug_info      0x00138b        0x8d6 build/default/debug/statemachines.o
+ .debug_info      0x001c61       0x12e8 build/default/debug/cameraslide16blue.o
+ .debug_info      0x002f49        0xcca build/default/debug/UART1.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x9c0
+.debug_abbrev     0x000000        0x8e0
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x162 build/default/production/TMR32.o
- .debug_abbrev    0x000162        0x135 build/default/production/inputs.o
- .debug_abbrev    0x000297         0xb0 build/default/production/interrupts.o
- .debug_abbrev    0x000347        0x125 build/default/production/motor.o
- .debug_abbrev    0x00046c        0x1b8 build/default/production/statemachines.o
- .debug_abbrev    0x000624        0x11c build/default/production/cameraslide16blue.o
- .debug_abbrev    0x000740        0x17c build/default/production/UART1.o
- .debug_abbrev    0x0008bc        0x104 build/default/production/ADC.o
+ .debug_abbrev    0x000000        0x162 build/default/debug/TMR32.o
+ .debug_abbrev    0x000162        0x135 build/default/debug/inputs.o
+ .debug_abbrev    0x000297         0xb0 build/default/debug/interrupts.o
+ .debug_abbrev    0x000347        0x125 build/default/debug/motor.o
+ .debug_abbrev    0x00046c        0x1b8 build/default/debug/statemachines.o
+ .debug_abbrev    0x000624        0x140 build/default/debug/cameraslide16blue.o
+ .debug_abbrev    0x000764        0x17c build/default/debug/UART1.o
 
-.debug_line       0x000000       0x13d9
+.debug_line       0x000000       0x1277
  *(.debug_line)
- .debug_line      0x000000        0x1ed build/default/production/TMR32.o
- .debug_line      0x0001ed        0x14c build/default/production/inputs.o
- .debug_line      0x000339        0x153 build/default/production/interrupts.o
- .debug_line      0x00048c        0x1db build/default/production/motor.o
- .debug_line      0x000667        0x723 build/default/production/statemachines.o
- .debug_line      0x000d8a        0x219 build/default/production/cameraslide16blue.o
- .debug_line      0x000fa3        0x2de build/default/production/UART1.o
- .debug_line      0x001281        0x158 build/default/production/ADC.o
+ .debug_line      0x000000        0x1ed build/default/debug/TMR32.o
+ .debug_line      0x0001ed        0x14c build/default/debug/inputs.o
+ .debug_line      0x000339        0x129 build/default/debug/interrupts.o
+ .debug_line      0x000462        0x1db build/default/debug/motor.o
+ .debug_line      0x00063d        0x723 build/default/debug/statemachines.o
+ .debug_line      0x000d60        0x239 build/default/debug/cameraslide16blue.o
+ .debug_line      0x000f99        0x2de build/default/debug/UART1.o
 
-.debug_frame      0x000000        0x270
+.debug_frame      0x000000        0x21c
  *(.debug_frame)
- .debug_frame     0x000000         0x44 build/default/production/TMR32.o
- .debug_frame     0x000044         0x34 build/default/production/inputs.o
- .debug_frame     0x000078         0x64 build/default/production/interrupts.o
- .debug_frame     0x0000dc         0x34 build/default/production/motor.o
- .debug_frame     0x000110         0x84 build/default/production/statemachines.o
- .debug_frame     0x000194         0x34 build/default/production/cameraslide16blue.o
- .debug_frame     0x0001c8         0x64 build/default/production/UART1.o
- .debug_frame     0x00022c         0x44 build/default/production/ADC.o
+ .debug_frame     0x000000         0x44 build/default/debug/TMR32.o
+ .debug_frame     0x000044         0x34 build/default/debug/inputs.o
+ .debug_frame     0x000078         0x54 build/default/debug/interrupts.o
+ .debug_frame     0x0000cc         0x34 build/default/debug/motor.o
+ .debug_frame     0x000100         0x84 build/default/debug/statemachines.o
+ .debug_frame     0x000184         0x34 build/default/debug/cameraslide16blue.o
+ .debug_frame     0x0001b8         0x64 build/default/debug/UART1.o
 
-.debug_str        0x000000        0x354
+.debug_str        0x000000        0x2e5
  *(.debug_str)
- .debug_str       0x000000         0x35 build/default/production/TMR32.o
- .debug_str       0x000035         0x1a build/default/production/inputs.o
- .debug_str       0x00004f         0x3b build/default/production/interrupts.o
- .debug_str       0x00008a         0x27 build/default/production/motor.o
- .debug_str       0x0000b1         0xc6 build/default/production/statemachines.o
- .debug_str       0x000177         0x91 build/default/production/cameraslide16blue.o
- .debug_str       0x000208         0xe6 build/default/production/UART1.o
- .debug_str       0x0002ee         0x66 build/default/production/ADC.o
+ .debug_str       0x000000         0x35 build/default/debug/TMR32.o
+ .debug_str       0x000035         0x1a build/default/debug/inputs.o
+ .debug_str       0x00004f         0x32 build/default/debug/interrupts.o
+ .debug_str       0x000081         0x27 build/default/debug/motor.o
+ .debug_str       0x0000a8         0xc6 build/default/debug/statemachines.o
+ .debug_str       0x00016e         0x91 build/default/debug/cameraslide16blue.o
+ .debug_str       0x0001ff         0xe6 build/default/debug/UART1.o
 
 .debug_loc
  *(.debug_loc)
@@ -481,46 +470,42 @@ __CONFIG1         0x0057fe          0x2
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x567
+                  0x000000        0x508
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x65 build/default/production/TMR32.o
+                  0x000000         0x65 build/default/debug/TMR32.o
  .debug_pubnames
-                  0x000065         0x50 build/default/production/inputs.o
+                  0x000065         0x50 build/default/debug/inputs.o
  .debug_pubnames
-                  0x0000b5         0x6e build/default/production/interrupts.o
+                  0x0000b5         0x5d build/default/debug/interrupts.o
  .debug_pubnames
-                  0x000123         0x64 build/default/production/motor.o
+                  0x000112         0x64 build/default/debug/motor.o
  .debug_pubnames
-                  0x000187        0x208 build/default/production/statemachines.o
+                  0x000176        0x208 build/default/debug/statemachines.o
  .debug_pubnames
-                  0x00038f         0x43 build/default/production/cameraslide16blue.o
+                  0x00037e         0x43 build/default/debug/cameraslide16blue.o
  .debug_pubnames
-                  0x0003d2        0x147 build/default/production/UART1.o
- .debug_pubnames
-                  0x000519         0x4e build/default/production/ADC.o
+                  0x0003c1        0x147 build/default/debug/UART1.o
 
 .debug_ranges
  *(.debug_ranges)
 
-.debug_aranges    0x000000         0xc0
+.debug_aranges    0x000000         0xa8
  *(.debug_aranges)
  .debug_aranges
-                  0x000000         0x18 build/default/production/TMR32.o
+                  0x000000         0x18 build/default/debug/TMR32.o
  .debug_aranges
-                  0x000018         0x18 build/default/production/inputs.o
+                  0x000018         0x18 build/default/debug/inputs.o
  .debug_aranges
-                  0x000030         0x18 build/default/production/interrupts.o
+                  0x000030         0x18 build/default/debug/interrupts.o
  .debug_aranges
-                  0x000048         0x18 build/default/production/motor.o
+                  0x000048         0x18 build/default/debug/motor.o
  .debug_aranges
-                  0x000060         0x18 build/default/production/statemachines.o
+                  0x000060         0x18 build/default/debug/statemachines.o
  .debug_aranges
-                  0x000078         0x18 build/default/production/cameraslide16blue.o
+                  0x000078         0x18 build/default/debug/cameraslide16blue.o
  .debug_aranges
-                  0x000090         0x18 build/default/production/UART1.o
- .debug_aranges
-                  0x0000a8         0x18 build/default/production/ADC.o
+                  0x000090         0x18 build/default/debug/UART1.o
 
 .ivt              0x000004         0xfc
                   0x000004          0x4 LONG 0x29a DEFINED (__ReservedTrap0)?ABSOLUTE (__ReservedTrap0):ABSOLUTE (__DefaultInterrupt)
@@ -538,12 +523,12 @@ __CONFIG1         0x0057fe          0x2
                   0x00001c          0x4 LONG 0x29a DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x29a DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x29a DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000022          0x4 LONG 0x1182 DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000022          0x4 LONG 0x11ac DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000024          0x4 LONG 0x29a DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000026          0x4 LONG 0x29a DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000028          0x4 LONG 0x29a DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002a          0x4 LONG 0x11ba DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002c          0x4 LONG 0x11a6 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002a          0x4 LONG 0x11e4 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002c          0x4 LONG 0x11d0 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00002e          0x4 LONG 0x29a DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000030          0x4 LONG 0x29a DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x29a DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
@@ -666,12 +651,12 @@ __CONFIG1         0x0057fe          0x2
                   0x00011c          0x4 LONG 0x29a DEFINED (__AltInterrupt4)?ABSOLUTE (__AltInterrupt4):DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x29a DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x29a DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000122          0x4 LONG 0x1182 DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000122          0x4 LONG 0x11ac DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000124          0x4 LONG 0x29a DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000126          0x4 LONG 0x29a DEFINED (__AltSPI1ErrInterrupt)?ABSOLUTE (__AltSPI1ErrInterrupt):DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000128          0x4 LONG 0x29a DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012a          0x4 LONG 0x11ba DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012c          0x4 LONG 0x11a6 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012a          0x4 LONG 0x11e4 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012c          0x4 LONG 0x11d0 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00012e          0x4 LONG 0x29a DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000130          0x4 LONG 0x29a DEFINED (__AltInterrupt14)?ABSOLUTE (__AltInterrupt14):DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x29a DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
@@ -1314,76 +1299,72 @@ LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a
 LOAD c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libc-elf.a
 END GROUP
-OUTPUT(dist/default/production/CameraSlideBlue-16bit.production.elf elf32-pic30)
+OUTPUT(dist/default/debug/CameraSlideBlue-16bit.debug.elf elf32-pic30)
 LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x0000c0        0x579
+                  0x0000a8        0x467
  .debug_pubtypes
-                  0x0000c0         0x9e build/default/production/TMR32.o
+                  0x0000a8         0x9e build/default/debug/TMR32.o
  .debug_pubtypes
-                  0x00015e         0x47 build/default/production/inputs.o
+                  0x000146         0x47 build/default/debug/inputs.o
  .debug_pubtypes
-                  0x0001a5         0x52 build/default/production/interrupts.o
+                  0x00018d         0x52 build/default/debug/interrupts.o
  .debug_pubtypes
-                  0x0001f7         0x45 build/default/production/motor.o
+                  0x0001df         0x45 build/default/debug/motor.o
  .debug_pubtypes
-                  0x00023c         0x5e build/default/production/statemachines.o
+                  0x000224         0x5e build/default/debug/statemachines.o
  .debug_pubtypes
-                  0x00029a        0x1c7 build/default/production/cameraslide16blue.o
+                  0x000282        0x1c7 build/default/debug/cameraslide16blue.o
  .debug_pubtypes
-                  0x000461         0xc6 build/default/production/UART1.o
- .debug_pubtypes
-                  0x000527        0x112 build/default/production/ADC.o
+                  0x000449         0xc6 build/default/debug/UART1.o
 
 __c30_signature
-                  0x000639         0x7e
+                  0x00050f         0x78
  __c30_signature
-                  0x000639          0x6 build/default/production/TMR32.o
+                  0x00050f          0x6 build/default/debug/TMR32.o
  __c30_signature
-                  0x00063f          0x6 build/default/production/inputs.o
+                  0x000515          0x6 build/default/debug/inputs.o
  __c30_signature
-                  0x000645          0x6 build/default/production/interrupts.o
+                  0x00051b          0x6 build/default/debug/interrupts.o
  __c30_signature
-                  0x00064b          0x6 build/default/production/motor.o
+                  0x000521          0x6 build/default/debug/motor.o
  __c30_signature
-                  0x000651          0x6 build/default/production/statemachines.o
+                  0x000527          0x6 build/default/debug/statemachines.o
  __c30_signature
-                  0x000657          0x6 build/default/production/cameraslide16blue.o
+                  0x00052d          0x6 build/default/debug/cameraslide16blue.o
  __c30_signature
-                  0x00065d          0x6 build/default/production/UART1.o
+                  0x000533          0x6 build/default/debug/UART1.o
  __c30_signature
-                  0x000663          0x6 build/default/production/ADC.o
+                  0x000539          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000669          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
+                  0x00053f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x00066f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
+                  0x000545          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
  __c30_signature
-                  0x000675          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x00054b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
  __c30_signature
-                  0x00067b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
+                  0x000551          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
  __c30_signature
-                  0x000681          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x000557          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
  __c30_signature
-                  0x000687          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x00055d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
  __c30_signature
-                  0x00068d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x000563          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
  __c30_signature
-                  0x000693          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x000569          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
  __c30_signature
-                  0x000699          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x00056f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
  __c30_signature
-                  0x00069f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x000575          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
  __c30_signature
-                  0x0006a5          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x00057b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x0006ab          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
- __c30_signature
-                  0x0006b1          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x000581          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
 
 .nbss               0x0800         0xde
- .nbss              0x0800         0x80 build/default/production/UART1.o
+ .nbss              0x0800         0x80 build/default/debug/UART1.o
                     0x0800                  _UART1_txBuffer
                     0x0828                  _UART1_txBufferCount
                     0x0829                  _UART1_txBufferWritePos
@@ -1394,7 +1375,7 @@ __c30_signature
                     0x0855                  _UART1_rxBufferReadPos
                     0x0856                  _UART1_rxFlag
                     0x0857                  _read
- .nbss              0x0880         0x46 build/default/production/statemachines.o
+ .nbss              0x0880         0x46 build/default/debug/statemachines.o
                     0x0880                  _tShutterStart
                     0x0886                  _tCurr
                     0x088c                  _processTime
@@ -1421,68 +1402,62 @@ __c30_signature
                     0x08ae                  _cmdBufferCount
                     0x08af                  _cmdBuffer
                     0x08c4                  _tempCmd
- .nbss              0x08c6          0xe build/default/production/inputs.o
+ .nbss              0x08c6          0xe build/default/debug/inputs.o
                     0x08c6                  _inputStartTimes
                     0x08d2                  _j
- .nbss              0x08d4          0xa build/default/production/motor.o
+ .nbss              0x08d4          0xa build/default/debug/motor.o
                     0x08d4                  _motor_speed
                     0x08d6                  _motor_stepsPerRev
                     0x08d8                  _tPrev
 
 .ndata              0x08de          0x6
- .ndata             0x08de          0x6 build/default/production/TMR32.o
+ .ndata             0x08de          0x6 build/default/debug/TMR32.o
                     0x08de                  _tReset
 
 .nbss               0x08e4          0x2
- .nbss              0x08e4          0x2 build/default/production/TMR32.o
+ .nbss              0x08e4          0x2 build/default/debug/TMR32.o
                     0x08e4                  _TMR32_overflows
 
 .ndata              0x08e6          0x2
- .ndata             0x08e6          0x2 build/default/production/statemachines.o
+ .ndata             0x08e6          0x2 build/default/debug/statemachines.o
                     0x08e6                  _resetCmd
 
-.nbss               0x08e8          0x2
- .nbss              0x08e8          0x2 build/default/production/ADC.o
-                    0x08e8                  _ADC_flag
+.const              0x8506          0xa load address 0x000506  
+ .const             0x8506          0xa build/default/debug/cameraslide16blue.o
 
-.text             0x000506        0xd5e
- .text            0x000506        0x684 build/default/production/statemachines.o
-                  0x000506                  _SM_mainStateMachine
-                  0x0005bc                  _SM_runStateMachine
-                  0x0007b0                  _parseNextCommand
-                  0x00098a                  _readCommand
-                  0x000a22                  _sendCommand
-                  0x000a42                  _checkCommandBuffer
-                  0x000aee                  _SM_init
- .text            0x000b8a        0x1f6 build/default/production/UART1.o
-                  0x000b8a                  _UART1_init
-                  0x000bd6                  _UART1_writeLine
-                  0x000c06                  _UART1_writeChar
-                  0x000c44                  _UART1_readLine
-                  0x000cc4                  _UART1_update
- .text            0x000d80        0x186 build/default/production/TMR32.o
-                  0x000d80                  _TMR32_timeDiff
-                  0x000e96                  _TMR32_getTime
-                  0x000eda                  _TMR32_init
- .text            0x000f06        0x10a build/default/production/cameraslide16blue.o
-                  0x000f06                  _main
-                  0x000f8a                  _main_init
- .text            0x001010         0xce build/default/production/motor.o
-                  0x001010                  _moveSingleStep
-                  0x0010b6                  _motor_init
- .text            0x0010de         0x9c build/default/production/inputs.o
-                  0x0010de                  _checkInputState
-                  0x00113e                  _inputs_init
- .text            0x00117a         0x80 build/default/production/interrupts.o
-                  0x00117a                  _interrupts_init
-                  0x001182                  __T2Interrupt
-                  0x0011a6                  __U1TXInterrupt
-                  0x0011ba                  __U1RXInterrupt
-                  0x0011da                  __AD1Interrup
- .text            0x0011fa         0x6a build/default/production/ADC.o
-                  0x0011fa                  _ADC_init
-                  0x00124e                  _ADC_newValue
-                  0x00125a                  _ADC_rawValue
+.text             0x000510        0xcf4
+ .text            0x000510        0x684 build/default/debug/statemachines.o
+                  0x000510                  _SM_mainStateMachine
+                  0x0005c6                  _SM_runStateMachine
+                  0x0007ba                  _parseNextCommand
+                  0x000994                  _readCommand
+                  0x000a2c                  _sendCommand
+                  0x000a4c                  _checkCommandBuffer
+                  0x000af8                  _SM_init
+ .text            0x000b94        0x1f6 build/default/debug/UART1.o
+                  0x000b94                  _UART1_init
+                  0x000be0                  _UART1_writeLine
+                  0x000c10                  _UART1_writeChar
+                  0x000c4e                  _UART1_readLine
+                  0x000cce                  _UART1_update
+ .text            0x000d8a        0x186 build/default/debug/TMR32.o
+                  0x000d8a                  _TMR32_timeDiff
+                  0x000ea0                  _TMR32_getTime
+                  0x000ee4                  _TMR32_init
+ .text            0x000f10        0x12a build/default/debug/cameraslide16blue.o
+                  0x000f10                  _main
+                  0x000fb4                  _main_init
+ .text            0x00103a         0xce build/default/debug/motor.o
+                  0x00103a                  _moveSingleStep
+                  0x0010e0                  _motor_init
+ .text            0x001108         0x9c build/default/debug/inputs.o
+                  0x001108                  _checkInputState
+                  0x001168                  _inputs_init
+ .text            0x0011a4         0x60 build/default/debug/interrupts.o
+                  0x0011a4                  _interrupts_init
+                  0x0011ac                  __T2Interrupt
+                  0x0011d0                  __U1TXInterrupt
+                  0x0011e4                  __U1RXInterrupt
 
-.dinit            0x001264         0x38
- .dinit           0x001264         0x38 data_init
+.dinit            0x001204         0x32
+ .dinit           0x001204         0x32 data_init

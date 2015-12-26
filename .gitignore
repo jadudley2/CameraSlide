@@ -5,6 +5,10 @@
 *.obj
 *.elf
 
+# Temporary files
+*.s#*
+*.b#*
+
 # Precompiled Headers
 *.gch
 *.pch

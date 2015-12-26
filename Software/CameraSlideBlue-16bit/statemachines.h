@@ -26,9 +26,22 @@
 #define R_TRAVELLING        52
 #define R_PROCESSING        53
 
+typedef struct commands {
+    unsigned char command;
+    unsigned char value;
+} command;
+
 void SM_mainStateMachine(void);
 
 void SM_runStateMachine(void);
+
+command readCommand(unsigned char pos);
+
+void sendCommand(unsigned char msg, unsigned char val);
+
+void parseNextCommand(void);
+
+unsigned char checkCommandBuffer(void);
 
 void SM_init(void);
 

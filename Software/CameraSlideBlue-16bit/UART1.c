@@ -8,140 +8,128 @@
 #include "UART1.h"
 
 // Transmit buffer variables
-unsigned char UART1_txBuffer[UART1_TX_BUFFER_SIZE] = { 0 };   // UART1 tx buffer
-unsigned char UART1_txBufferCount;        // how many bytes in UART1_txBuffer
-unsigned char UART1_txBufferWritePos;     // write position in UART1_txBuffer
-unsigned char UART1_txBufferReadPos;      // read position in UART1_txBuffer
+unsigned char UART1_txBuffer[UART1_TX_BUFFER_SIZE];   // UART1 tx buffer
+unsigned char UART1_txBufferCount = 0;      // how many bytes in UART1_txBuffer
+unsigned char UART1_txBufferWritePos = 0;   // write position in UART1_txBuffer
+unsigned char UART1_txBufferReadPos = 0;    // read position in UART1_txBuffer
 
 // Receive (user-defined) buffer variables
-unsigned char UART1_rxBuffer[UART1_RX_BUFFER_SIZE];       // UART1 rx buffer
-unsigned char UART1_rxBufferCount;        // how many bytes in UART1_rxBuffer
-unsigned char UART1_rxBufferWritePos;     // write position in UART1_rxBuffer
-unsigned char UART1_rxBufferReadPos;      // read position in UART1_rxBuffer
+unsigned char UART1_rxBuffer[UART1_RX_BUFFER_SIZE]; // UART1 rx buffer
+unsigned char UART1_rxBufferCount = 0;      // how many bytes in UART1_rxBuffer
+unsigned char UART1_rxBufferWritePos = 0;   // write position in UART1_rxBuffer
+unsigned char UART1_rxBufferReadPos = 0;    // read position in UART1_rxBuffer
 
-unsigned char UART1_txFlag;
-unsigned char UART1_rxFlag;
+unsigned char UART1_rxFlag = 0;
 
-void UART_init() {
-    UART1_txBufferCount = 0;
-    UART1_txBufferWritePos = 0;
-    UART1_txBufferReadPos = 0;
+unsigned char read[UART1_RX_BUFFER_SIZE];
 
-    UART1_rxBufferCount = 0;
-    UART1_rxBufferWritePos = 0;
-    UART1_rxBufferReadPos = 0;
-
-    UART1_txFlag = 0;
-    UART1_rxFlag = 0;
-
+void UART1_init() {
     // set uart registers
-    TRISBbits.TRISB2 = 1;       // set rx pin as input
-    U1STAbits.UTXISEL0 = 0;     // set UT1ISEL interrupt select...
-    U1STAbits.UTXISEL1 = 1;     // interrupt when transmit buffer is empty
-    U1STAbits.URXISEL = 0;  // interrupt when any data transferred to rx buffer
-    U1STAbits.ADDEN = 1;    // enable address detect (last data bit is 1)
+    PMD1bits.U1MD = 0;          // enable UART1 peripheral
+    U1MODEbits.USIDL = 1;       // disable UART1 in idle mode
+    U1MODEbits.RTSMD = 1;       // simplex mode (set 0 for flow control)
     U1MODEbits.PDSEL = 0b00;    // 8 data bits, no parity
     U1MODEbits.STSEL = 0;       // 1 stop bit
     U1MODEbits.BRGH = 0;        // set BRGH to 0
-    U1BRG = 12;     // set U1BRG to 12 (based on Fcy = 2MHz) for baud 9600
-    U1MODEbits.UARTEN = 1;  // enable UART
-    U1MODEbits.USIDL = 0;   // continue on idle
-    U1MODEbits.RTSMD = 1;   // simplex mode (set 0 for flow control)
-    U1MODEbits.UEN = 0b00;  // enable tx/rx, dio control of flow control pins
+    U1BRG = 23;     // set U1BRG to 12 (based on Fcy = 2MHz) for baud 9600
+    U1STAbits.UTXISEL0 = 0;     // set UT1ISEL interrupt select...
+    U1STAbits.UTXISEL1 = 1;     // interrupt when transmit buffer is empty
+    U1STAbits.URXISEL = 0b00;   // interrupt when any data in rx buffer
+    IPC3bits.U1TXIP = 4;        // tx interrupt priority
+    IPC2bits.U1RXIP = 4;        // rx interrupt priority
+    IEC0bits.U1TXIE = 1;        // enable tx interrupt
+    IEC0bits.U1RXIE = 1;        // enable rx interrupt
+    U1STAbits.ADDEN = 1;        // enable address detect (last data bit is 1)
+    U1MODEbits.UEN = 0b00;      // enable U1Tx, U1Rx in simplex mode
+    U1MODEbits.UARTEN = 1;      // enable UART1
 }
 
-void UART1_writeLine(unsigned char* data) {
-    unsigned char chr = 1;
-    unsigned char i = 0;
+void UART1_writeLine(unsigned char* data, unsigned char len) {
+    unsigned char i;
 
     // iterate through array until null byte
-    while(chr != '\0') {
-        chr = data[i];          // read byte at position
-        if(chr == '\0') break;     // if null, break out
-        UART1_writeChar(chr);      // write char to uart1 tx buffer
-        i++;
+    for (i = 0; i < len; i++) {
+        UART1_writeChar(data[i]);      // write char to uart1 tx buffer
     }
-    UART1_writeChar(13);            // carriage return
-    UART1_writeChar(10);            // line feed
+    UART1_writeChar('\r');            // carriage return
+    UART1_writeChar('\n');            // line feed
 }
 
 void UART1_writeChar(unsigned char chr) {
-    // if not enabled, enable transmit
-    if(U1STAbits.UTXEN != 1) {
-        U1STAbits.UTXEN = 1;
+    // if at end of buffer, wrap to beginning
+    if(UART1_txBufferWritePos >= UART1_TX_BUFFER_SIZE) {
+        UART1_txBufferWritePos = 0;
     }
-
-    // if tx buffer not full, add directly to it
-    if(U1STAbits.UTXBF != 1) {
-        U1TXREG += chr;
-    } else {    // add to the soft tx buffer
-        // if at end of buffer, wrap to beginning
-        if(UART1_txBufferWritePos >= UART1_TX_BUFFER_SIZE) {
-            UART1_txBufferWritePos = 0;
-        }
-        UART1_txBuffer[UART1_txBufferWritePos] = chr;  // add 'chr' to buffer
-        UART1_txBufferCount++;          // increment buffer byte count
-        UART1_txBufferWritePos++;       // increment write position
-    }
+    UART1_txBuffer[UART1_txBufferWritePos] = chr;  // add char to buffer
+    UART1_txBufferCount++;          // increment buffer byte count
+    UART1_txBufferWritePos++;       // increment write position
 }
 
 unsigned char* UART1_readLine(unsigned char len) {
+    // bound len
+    if ((len == 0) || (len > UART1_rxBufferCount)) {
+        len = UART1_rxBufferCount;
+    }
+    
     // transfer number of desired bytes to data array
-    unsigned char read[len] = { 0 };
     unsigned char i;
     for (i = 0; i < len; i++) {
         read[i] = UART1_rxBuffer[UART1_rxBufferReadPos];
+        UART1_rxBuffer[UART1_rxBufferReadPos] = 0;
+        UART1_rxBufferCount--;
         UART1_rxBufferReadPos++;
-        // check for buffer read wraparound
+        // check for buffer read pos wraparound
         if (UART1_rxBufferReadPos >= UART1_RX_BUFFER_SIZE) {
             UART1_rxBufferReadPos = 0;
         }
     }
 
-    UART1_rxBufferCount -= len;
-
-    return read;
+    return &read[0];
 }
 
 unsigned char UART1_update(void) {
-    // check if transmit interrupt has occurred
-    if (UART1_txFlag == 1) {
-        UART1_txFlag = 0;
-        // send next bit, if needed
-        if (UART1_txBufferCount > 0) {
-            // if read pos of buffer is beyond end of array, move to 0
+    // send next bit, if there's more in the buffer
+    if (UART1_txBufferCount > 0) {
+        // make sure transmit buffer isn't full
+        if (U1STAbits.UTXBF != 1) {
+            // check for buffer read wraparound
             if (UART1_txBufferReadPos >= UART1_TX_BUFFER_SIZE) {
                 UART1_txBufferReadPos = 0;
             }
+
+            // set tx enable bit
+            U1STAbits.UTXEN = 1;
+
             // write next char to tx reg
-            U1TXREG += UART1_txBuffer[UART1_txBufferReadPos];
+            U1TXREG = UART1_txBuffer[UART1_txBufferReadPos];
             UART1_txBufferCount--;      // decrement buffer byte count
             UART1_txBufferReadPos++;    // increment buffer read pos
         }
     }
 
-    // check if receive interrupt has occurred
+    // check if rx interrupt has occurred
     if (UART1_rxFlag == 1) {
         UART1_rxFlag = 0;
 
         // check for buffer overflow
-        if (U1STAbits.OERR != 0) {
-            U1STAbits.OERR = 0;
+        if (U1STAbits.OERR == 1) {
+            U1STAbits.OERR = 0;     // reset buffer flag
         }
-        
-        // clear all bytes in buffer reg
-        while(U1RXREG != 0) {
-            unsigned char chr = U1RXREG;
-            // add data to rxbuffer at rxwritepos
-            if(UART1_rxBufferWritePos >= UART1_TX_BUFFER_SIZE) {
+
+        // read through entire rx fifo buffer
+        while (U1STAbits.URXDA != 0) {
+            // read buffered rx data into soft buffer
+            UART1_rxBuffer[UART1_rxBufferWritePos] = U1RXREG;
+            UART1_rxBufferCount++;      // increment buffer byte count
+            UART1_rxBufferWritePos++;   // increment buffer write pos
+
+            // check for right pos wraparound
+            if (UART1_rxBufferWritePos >= UART1_RX_BUFFER_SIZE) {
                 UART1_rxBufferWritePos = 0;
             }
-            UART1_rxBuffer[UART1_rxBufferWritePos] = chr;
-            UART1_rxBufferWritePos++;           // increment buffer write pos
-            UART1_rxBufferCount++;              // increment buffer byte count
         }
     }
 
-    // return the number of bytes left in rx soft buffer
+    // return the number of bytes in rx soft buffer
     return UART1_rxBufferCount;
 }

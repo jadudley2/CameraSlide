@@ -15,7 +15,7 @@
 #define SEC                 1
 #define MSEC                1000
 #define USEC                1000000
-#define TICKS_PER_S         2000000
+#define TICKS_PER_S         3685000
 #define US_PER_MS           1000
 #define S_PER_OVERFLOW      2000
 #define MS_PER_S            1000

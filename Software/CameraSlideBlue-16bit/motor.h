@@ -11,9 +11,6 @@
 #include "constants.h"
 #include "TMR32.h"
 
-#define STEP_INTERVAL           10         // milliseconds, min btwn steps
-#define STEPS_PER_REV           200
-
 /*
  * moveSingleStep
  * advances stepper motor a single step in prescribed direction
@@ -22,7 +19,7 @@
  */
 unsigned char moveSingleStep(unsigned char dir);
 
-void motor_init(void);
+void motor_init(unsigned int spd, unsigned int stepsPerRev);
 
 #endif	/* MOTOR_H */
 
