@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <xc.h>
-#include "uart.h"
+#include "UART1.h"
 
 void interrupts_init(void);
 
@@ -21,7 +21,7 @@ void __attribute__((__interrupt__, auto_psv)) _U1TXInterrupt(void);
 
 void __attribute__((__interrupt__, auto_psv)) _U1RXInterrupt(void);
 
-void __attribute__((__interrupt__, auto_psv)) _AD1Interrupt(void);
+void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void);
 
 #endif	/* INTERRUPTS_H */
 

@@ -8,7 +8,6 @@
 #include "cameraslide16blue.h"
 
 extern unsigned char UART1_rxFlag;
-extern unsigned char UART1_rxBufferCount;
 
 int main() {
 
@@ -19,17 +18,16 @@ int main() {
     timeObj tNow = tStart;
     
     while (1) {
-        while(TMR32_timeDiff(tNow,tStart,MSEC) < 100) {
+        while(TMR32_timeDiff(tNow,tStart,MSEC) < 1000) {
             tNow = TMR32_getTime();
 //            UART1_update();
         }
-        if (ADC_rawValue() >= 1000) {
-            SYS_LED_PIN = ~SYS_LED_PIN;
-        }
+//        if (ADC_rawValue() >= 1000) {
+//            SYS_LED_PIN = ~SYS_LED_PIN;
+//        }
 
-//        unsigned char line[] = {'t','e','s','t','i','n','g','.','.','.'};
-//        UART1_writeLine(&line[0],sizeof(line));
-////        UART1_writeChar('c');
+        unsigned char line[] = {'1','2','3','4','5','6','7','8','9','0'};
+        UART1_writeLine(&line[0],sizeof(line));
 //        if (UART1_update() != 0) {
 //            unsigned char* ln = UART1_readLine(5);
 //            if (ln[4] == 'k') {
@@ -41,7 +39,7 @@ int main() {
 //        moveSingleStep(HOME);
 //        SYS_LED_PIN = ~SYS_LED_PIN;
 //        PWR_LED_PIN = ~PWR_LED_PIN;
-        HB_LED_PIN = ~HB_LED_PIN;
+//        HB_LED_PIN = ~HB_LED_PIN;
 //        SHUTTER_PIN = ~SHUTTER_PIN;
 //        BT_RESET_PIN = ~BT_RESET_PIN;
         tStart = tNow;

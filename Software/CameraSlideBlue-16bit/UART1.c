@@ -36,7 +36,7 @@ void UART1_init() {
     U1STAbits.UTXISEL1 = 1;     // interrupt when transmit buffer is empty
     U1STAbits.URXISEL = 0b00;   // interrupt when any data in rx buffer
     IPC3bits.U1TXIP = 4;        // tx interrupt priority
-    IPC2bits.U1RXIP = 4;        // rx interrupt priority
+    IPC2bits.U1RXIP = 2;        // rx interrupt priority
     IEC0bits.U1TXIE = 1;        // enable tx interrupt
     IEC0bits.U1RXIE = 1;        // enable rx interrupt
     U1STAbits.ADDEN = 1;        // enable address detect (last data bit is 1)
@@ -57,16 +57,23 @@ void UART1_writeLine(unsigned char* data, unsigned char len) {
 
 void UART1_writeChar(unsigned char chr) {
     // if at end of buffer, wrap to beginning
-    if(UART1_txBufferWritePos >= UART1_TX_BUFFER_SIZE) {
+    if (UART1_txBufferWritePos >= UART1_TX_BUFFER_SIZE) {
         UART1_txBufferWritePos = 0;
     }
-    UART1_txBuffer[UART1_txBufferWritePos] = chr;  // add char to buffer
-    UART1_txBufferCount++;          // increment buffer byte count
-    UART1_txBufferWritePos++;       // increment write position
+
+    // if buffer not full, write character directly to tx register
+    if (U1STAbits.UTXBF != 1) {
+        U1STAbits.UTXEN = 1;
+        U1TXREG = chr;
+    } else {        // else, add to buffer
+        UART1_txBuffer[UART1_txBufferWritePos] = chr;  // add char to buffer
+        UART1_txBufferCount++;          // increment buffer byte count
+        UART1_txBufferWritePos++;       // increment write position
+    }
 }
 
 unsigned char* UART1_readLine(unsigned char len) {
-    // bound len
+    // bound length
     if ((len == 0) || (len > UART1_rxBufferCount)) {
         len = UART1_rxBufferCount;
     }
