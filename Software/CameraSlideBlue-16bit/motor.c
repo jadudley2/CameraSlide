@@ -15,7 +15,7 @@ timeObj tPrev;
 
 unsigned char moveSingleStep(unsigned char dir) {
     timeObj tCurr = TMR32_getTime();
-
+    SYS_LED_PIN = HI;
     // check if sufficient time has passed
     if(TMR32_timeDiff(tCurr, tPrev, MSEC) >= motor_speed) {
         if(MOTOR_1_PIN == HI) {
@@ -53,9 +53,15 @@ unsigned char moveSingleStep(unsigned char dir) {
 
         // successful step
         tPrev = tCurr;
+        SYS_LED_PIN = LO;
         return 1;
     }
+    SYS_LED_PIN = LO;
     return 0;
+}
+
+void motor_setSpeed(unsigned int spd) {
+    motor_speed = spd;
 }
 
 void motor_init(unsigned int spd, unsigned int stepsPerRev) {

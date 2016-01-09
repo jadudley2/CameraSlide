@@ -85,24 +85,21 @@ Program Memory  [Origin = 0x200, Length = 0x55fc]
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x306           0x489  (1161)
-.const                       0x506                 0xa             0xf  (15)
-.text                        0x510               0xdd2          0x14bb  (5307)
-.dinit                      0x12e2                0x38            0x54  (84)
+.text                        0x506               0xd78          0x1434  (5172)
+.dinit                      0x127e                0x40            0x60  (96)
 
-                     Total program memory used (bytes):         0x19a7  (6567) 19%
+                     Total program memory used (bytes):         0x191d  (6429) 19%
 
 
 Data Memory  [Origin = 0x800, Length = 0x400]
 
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
-.nbss                        0x800                   0            0xde  (222)
-.ndata                       0x8de                   0             0x6  (6)
-.nbss                        0x8e4                   0             0x2  (2)
-.ndata                       0x8e6                   0             0x2  (2)
-.nbss                        0x8e8                   0             0x2  (2)
+.nbss                        0x800                   0            0xb2  (178)
+.ndata                       0x8b2                   0             0xa  (10)
+.nbss                        0x8bc                   0             0x4  (4)
 
-                        Total data memory used (bytes):           0xea  (234) 22%
+                        Total data memory used (bytes):           0xc0  (192) 18%
 
 
 Dynamic Memory Usage
@@ -110,9 +107,9 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x8ea                               0x316  (790)
+stack                        0x8c0                               0x340  (832)
 
-                        Maximum dynamic memory (bytes):          0x316  (790)
+                        Maximum dynamic memory (bytes):          0x340  (832)
 
 
 External Symbols in Data Memory (by address):
@@ -121,95 +118,99 @@ External Symbols in Data Memory (by address):
                     0x0828                  _UART1_txBufferCount
                     0x0829                  _UART1_txBufferWritePos
                     0x082a                  _UART1_txBufferReadPos
-                    0x082b                  _UART1_rxBuffer
-                    0x0853                  _UART1_rxBufferCount
-                    0x0854                  _UART1_rxBufferWritePos
-                    0x0855                  _UART1_rxBufferReadPos
-                    0x0856                  _UART1_rxFlag
-                    0x0857                  _read
-                    0x0880                  _tShutterStart
-                    0x0886                  _tCurr
-                    0x088c                  _processTime
-                    0x088e                  _shutterTime
-                    0x0890                  _lastPic
-                    0x0892                  _currPic
-                    0x0894                  _totPics
-                    0x0896                  _stepsPerInt
-                    0x0898                  _startPos
-                    0x089a                  _currPos
-                    0x089c                  _nextPos
-                    0x089e                  _homePos
-                    0x08a0                  _awayPos
-                    0x08a2                  _radius
-                    0x08a4                  _length
-                    0x08a6                  _mainState
-                    0x08a7                  _runState
-                    0x08a8                  _travDir
-                    0x08a9                  _movingFlag
-                    0x08aa                  _shutterFlag
-                    0x08ab                  _picFlag
-                    0x08ac                  _readCmdFlag
-                    0x08ad                  _readValFlag
-                    0x08ae                  _cmdBufferCount
-                    0x08af                  _cmdBuffer
-                    0x08c4                  _tempCmd
-                    0x08c6                  _inputStartTimes
-                    0x08d2                  _j
-                    0x08d4                  _motor_speed
-                    0x08d6                  _motor_stepsPerRev
-                    0x08d8                  _tPrev
-                    0x08de                  _tReset
-                    0x08e4                  _TMR32_overflows
-                    0x08e6                  _resetCmd
-                    0x08e8                  _ADC_flag
+                    0x082b                  _UART1_cmdFlag
+                    0x082c                  _UART1_cmdBuffer
+                    0x0854                  _UART1_cmdBufferCount
+                    0x0855                  _UART1_cmdBufferWritePos
+                    0x0856                  _UART1_cmdBufferReadPos
+                    0x0858                  _tShutterStart
+                    0x085e                  _tCurr
+                    0x0864                  _processTime
+                    0x0866                  _shutterTime
+                    0x0868                  _lastPic
+                    0x086a                  _currPic
+                    0x086c                  _totPics
+                    0x086e                  _stepsPerInt
+                    0x0870                  _startPos
+                    0x0872                  _currPos
+                    0x0874                  _nextPos
+                    0x0876                  _homePos
+                    0x0878                  _awayPos
+                    0x087a                  _radius
+                    0x087c                  _length
+                    0x087e                  _mainState
+                    0x087f                  _runState
+                    0x0880                  _travDir
+                    0x0881                  _movingFlag
+                    0x0882                  _shutterFlag
+                    0x0883                  _picFlag
+                    0x0884                  _readCmdFlag
+                    0x0885                  _readValFlag
+                    0x0886                  _tStart
+                    0x088c                  _tNow
+                    0x0892                  _inputStartTimes
+                    0x089e                  _j
+                    0x08a0                  _motor_speed
+                    0x08a2                  _motor_stepsPerRev
+                    0x08a4                  _tPrev
+                    0x08aa                  _startFlag
+                    0x08ab                  _msgFlag
+                    0x08ac                  _valFlag
+                    0x08ae                  _cmd
+                    0x08b2                  _tReset
+                    0x08b8                  _resetCmd
+                    0x08bc                  _TMR32_overflows
+                    0x08be                  _ADC_flag
 
 External Symbols in Data Memory (by name):
 
-                    0x08e8                  _ADC_flag
-                    0x08e4                  _TMR32_overflows
-                    0x082b                  _UART1_rxBuffer
-                    0x0853                  _UART1_rxBufferCount
-                    0x0855                  _UART1_rxBufferReadPos
-                    0x0854                  _UART1_rxBufferWritePos
-                    0x0856                  _UART1_rxFlag
+                    0x08be                  _ADC_flag
+                    0x08bc                  _TMR32_overflows
+                    0x082c                  _UART1_cmdBuffer
+                    0x0854                  _UART1_cmdBufferCount
+                    0x0856                  _UART1_cmdBufferReadPos
+                    0x0855                  _UART1_cmdBufferWritePos
+                    0x082b                  _UART1_cmdFlag
                     0x0800                  _UART1_txBuffer
                     0x0828                  _UART1_txBufferCount
                     0x082a                  _UART1_txBufferReadPos
                     0x0829                  _UART1_txBufferWritePos
-                    0x08a0                  _awayPos
-                    0x08af                  _cmdBuffer
-                    0x08ae                  _cmdBufferCount
-                    0x0892                  _currPic
-                    0x089a                  _currPos
-                    0x089e                  _homePos
-                    0x08c6                  _inputStartTimes
-                    0x08d2                  _j
-                    0x0890                  _lastPic
-                    0x08a4                  _length
-                    0x08a6                  _mainState
-                    0x08d4                  _motor_speed
-                    0x08d6                  _motor_stepsPerRev
-                    0x08a9                  _movingFlag
-                    0x089c                  _nextPos
-                    0x08ab                  _picFlag
-                    0x088c                  _processTime
-                    0x08a2                  _radius
-                    0x0857                  _read
-                    0x08ac                  _readCmdFlag
-                    0x08ad                  _readValFlag
-                    0x08e6                  _resetCmd
-                    0x08a7                  _runState
-                    0x08aa                  _shutterFlag
-                    0x088e                  _shutterTime
-                    0x0898                  _startPos
-                    0x0896                  _stepsPerInt
-                    0x0886                  _tCurr
-                    0x08d8                  _tPrev
-                    0x08de                  _tReset
-                    0x0880                  _tShutterStart
-                    0x08c4                  _tempCmd
-                    0x0894                  _totPics
-                    0x08a8                  _travDir
+                    0x0878                  _awayPos
+                    0x08ae                  _cmd
+                    0x086a                  _currPic
+                    0x0872                  _currPos
+                    0x0876                  _homePos
+                    0x0892                  _inputStartTimes
+                    0x089e                  _j
+                    0x0868                  _lastPic
+                    0x087c                  _length
+                    0x087e                  _mainState
+                    0x08a0                  _motor_speed
+                    0x08a2                  _motor_stepsPerRev
+                    0x0881                  _movingFlag
+                    0x08ab                  _msgFlag
+                    0x0874                  _nextPos
+                    0x0883                  _picFlag
+                    0x0864                  _processTime
+                    0x087a                  _radius
+                    0x0884                  _readCmdFlag
+                    0x0885                  _readValFlag
+                    0x08b8                  _resetCmd
+                    0x087f                  _runState
+                    0x0882                  _shutterFlag
+                    0x0866                  _shutterTime
+                    0x08aa                  _startFlag
+                    0x0870                  _startPos
+                    0x086e                  _stepsPerInt
+                    0x085e                  _tCurr
+                    0x088c                  _tNow
+                    0x08a4                  _tPrev
+                    0x08b2                  _tReset
+                    0x0858                  _tShutterStart
+                    0x0886                  _tStart
+                    0x086c                  _totPics
+                    0x0880                  _travDir
+                    0x08ac                  _valFlag
 
 External Symbols in Program Memory (by address):
 
@@ -231,57 +232,58 @@ External Symbols in Program Memory (by address):
                   0x000420                  ___mulsf3
                   0x000488                  ___udivsi3
                   0x0004a8                  ___floatundisf
-                  0x000510                  _SM_mainStateMachine
-                  0x0005c6                  _SM_runStateMachine
-                  0x0007ba                  _parseNextCommand
-                  0x000994                  _readCommand
-                  0x000a2c                  _sendCommand
-                  0x000a4c                  _checkCommandBuffer
-                  0x000af8                  _SM_init
-                  0x000b94                  _UART1_init
-                  0x000be0                  _UART1_writeLine
-                  0x000c10                  _UART1_writeChar
-                  0x000c62                  _UART1_readLine
-                  0x000ce2                  _UART1_update
-                  0x000d9e                  _TMR32_timeDiff
-                  0x000eb4                  _TMR32_getTime
-                  0x000ef8                  _TMR32_init
-                  0x000f24                  _interrupts_init
-                  0x000f2c                  __T2Interrupt
-                  0x000f50                  __U1TXInterrupt
-                  0x000fb6                  __U1RXInterrupt
-                  0x001012                  __ADC1Interrupt
-                  0x001032                  _main
-                  0x001088                  _main_init
-                  0x00110e                  _moveSingleStep
-                  0x0011b4                  _motor_init
-                  0x0011dc                  _checkInputState
-                  0x00123c                  _inputs_init
-                  0x001278                  _ADC_init
-                  0x0012cc                  _ADC_newValue
-                  0x0012d8                  _ADC_rawValue
+                  0x000506                  _SM_mainStateMachine
+                  0x0005b0                  _SM_runStateMachine
+                  0x000816                  _SM_parseNextCommand
+                  0x000a30                  _SM_init
+                  0x000aea                  _SM_heartbeat
+                  0x000b42                  _interrupts_init
+                  0x000b4a                  __T2Interrupt
+                  0x000b6e                  __U1TXInterrupt
+                  0x000bd4                  __U1RXInterrupt
+                  0x000cce                  __ADC1Interrupt
+                  0x000cee                  _TMR32_timeDiff
+                  0x000e04                  _TMR32_getTime
+                  0x000e48                  _TMR32_init
+                  0x000e74                  _UART1_init
+                  0x000ec0                  _UART1_writeLine
+                  0x000ef0                  _UART1_writeChar
+                  0x000f42                  _UART1_readCommand
+                  0x000fa6                  _UART1_sendCommand
+                  0x000fd0                  _UART1_flushCommands
+                  0x000ff6                  _moveSingleStep
+                  0x0010a2                  _motor_setSpeed
+                  0x0010ae                  _motor_init
+                  0x0010d6                  _checkInputState
+                  0x001136                  _inputs_init
+                  0x001172                  _main
+                  0x00117a                  _main_init
+                  0x0011f8                  _ADC_init
+                  0x00126c                  _ADC_rawValue
 
 External Symbols in Program Memory (by name):
 
-                  0x001278                  _ADC_init
-                  0x0012cc                  _ADC_newValue
-                  0x0012d8                  _ADC_rawValue
-                  0x000af8                  _SM_init
-                  0x000510                  _SM_mainStateMachine
-                  0x0005c6                  _SM_runStateMachine
-                  0x000eb4                  _TMR32_getTime
-                  0x000ef8                  _TMR32_init
-                  0x000d9e                  _TMR32_timeDiff
-                  0x000b94                  _UART1_init
-                  0x000c62                  _UART1_readLine
-                  0x000ce2                  _UART1_update
-                  0x000c10                  _UART1_writeChar
-                  0x000be0                  _UART1_writeLine
-                  0x001012                  __ADC1Interrupt
+                  0x0011f8                  _ADC_init
+                  0x00126c                  _ADC_rawValue
+                  0x000aea                  _SM_heartbeat
+                  0x000a30                  _SM_init
+                  0x000506                  _SM_mainStateMachine
+                  0x000816                  _SM_parseNextCommand
+                  0x0005b0                  _SM_runStateMachine
+                  0x000e04                  _TMR32_getTime
+                  0x000e48                  _TMR32_init
+                  0x000cee                  _TMR32_timeDiff
+                  0x000fd0                  _UART1_flushCommands
+                  0x000e74                  _UART1_init
+                  0x000f42                  _UART1_readCommand
+                  0x000fa6                  _UART1_sendCommand
+                  0x000ef0                  _UART1_writeChar
+                  0x000ec0                  _UART1_writeLine
+                  0x000cce                  __ADC1Interrupt
                   0x00029a                  __DefaultInterrupt
-                  0x000f2c                  __T2Interrupt
-                  0x000fb6                  __U1RXInterrupt
-                  0x000f50                  __U1TXInterrupt
+                  0x000b4a                  __T2Interrupt
+                  0x000bd4                  __U1RXInterrupt
+                  0x000b6e                  __U1TXInterrupt
                   0x00029e                  ___divsf3
                   0x000322                  ___divsi3
                   0x000340                  ___fixunssfsi
@@ -299,17 +301,14 @@ External Symbols in Program Memory (by name):
                   0x0003f0                  __funpack2
                   0x00022c                  __psv_init
                   0x000200                  __resetPRI
-                  0x000a4c                  _checkCommandBuffer
-                  0x0011dc                  _checkInputState
-                  0x00123c                  _inputs_init
-                  0x000f24                  _interrupts_init
-                  0x001032                  _main
-                  0x001088                  _main_init
-                  0x0011b4                  _motor_init
-                  0x00110e                  _moveSingleStep
-                  0x0007ba                  _parseNextCommand
-                  0x000994                  _readCommand
-                  0x000a2c                  _sendCommand
+                  0x0010d6                  _checkInputState
+                  0x001136                  _inputs_init
+                  0x000b42                  _interrupts_init
+                  0x001172                  _main
+                  0x00117a                  _main_init
+                  0x0010ae                  _motor_init
+                  0x0010a2                  _motor_setSpeed
+                  0x000ff6                  _moveSingleStep
 
 Memory Configuration
 
@@ -419,61 +418,61 @@ __CONFIG1         0x0057fe          0x2
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x4b11
+.debug_info       0x000000       0x4c2c
  *(.debug_info)
  .debug_info      0x000000        0x80e build/default/production/TMR32.o
  .debug_info      0x00080e        0x2d5 build/default/production/inputs.o
- .debug_info      0x000ae3        0x769 build/default/production/interrupts.o
- .debug_info      0x00124c        0x3f6 build/default/production/motor.o
- .debug_info      0x001642        0x8d6 build/default/production/statemachines.o
- .debug_info      0x001f18       0x1229 build/default/production/cameraslide16blue.o
- .debug_info      0x003141        0xcca build/default/production/UART1.o
- .debug_info      0x003e0b        0xd06 build/default/production/ADC.o
+ .debug_info      0x000ae3        0x88f build/default/production/interrupts.o
+ .debug_info      0x001372        0x4d3 build/default/production/motor.o
+ .debug_info      0x001845        0x896 build/default/production/statemachines.o
+ .debug_info      0x0020db       0x1114 build/default/production/cameraslide16blue.o
+ .debug_info      0x0031ef        0xd57 build/default/production/UART1.o
+ .debug_info      0x003f46        0xce6 build/default/production/ADC.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0xa37
+.debug_abbrev     0x000000        0x9c4
  *(.debug_abbrev)
  .debug_abbrev    0x000000        0x162 build/default/production/TMR32.o
  .debug_abbrev    0x000162        0x135 build/default/production/inputs.o
- .debug_abbrev    0x000297        0x10c build/default/production/interrupts.o
- .debug_abbrev    0x0003a3        0x125 build/default/production/motor.o
- .debug_abbrev    0x0004c8        0x1b8 build/default/production/statemachines.o
- .debug_abbrev    0x000680        0x137 build/default/production/cameraslide16blue.o
- .debug_abbrev    0x0007b7        0x17c build/default/production/UART1.o
- .debug_abbrev    0x000933        0x104 build/default/production/ADC.o
+ .debug_abbrev    0x000297        0x174 build/default/production/interrupts.o
+ .debug_abbrev    0x00040b        0x125 build/default/production/motor.o
+ .debug_abbrev    0x000530        0x131 build/default/production/statemachines.o
+ .debug_abbrev    0x000661         0xe0 build/default/production/cameraslide16blue.o
+ .debug_abbrev    0x000741        0x17f build/default/production/UART1.o
+ .debug_abbrev    0x0008c0        0x104 build/default/production/ADC.o
 
-.debug_line       0x000000       0x1459
+.debug_line       0x000000       0x146f
  *(.debug_line)
  .debug_line      0x000000        0x1ed build/default/production/TMR32.o
  .debug_line      0x0001ed        0x14c build/default/production/inputs.o
- .debug_line      0x000339        0x1c3 build/default/production/interrupts.o
- .debug_line      0x0004fc        0x1db build/default/production/motor.o
- .debug_line      0x0006d7        0x723 build/default/production/statemachines.o
- .debug_line      0x000dfa        0x211 build/default/production/cameraslide16blue.o
- .debug_line      0x00100b        0x2f6 build/default/production/UART1.o
- .debug_line      0x001301        0x158 build/default/production/ADC.o
+ .debug_line      0x000339        0x256 build/default/production/interrupts.o
+ .debug_line      0x00058f        0x215 build/default/production/motor.o
+ .debug_line      0x0007a4        0x70e build/default/production/statemachines.o
+ .debug_line      0x000eb2        0x1b4 build/default/production/cameraslide16blue.o
+ .debug_line      0x001066        0x2a3 build/default/production/UART1.o
+ .debug_line      0x001309        0x166 build/default/production/ADC.o
 
-.debug_frame      0x000000        0x270
+.debug_frame      0x000000        0x260
  *(.debug_frame)
  .debug_frame     0x000000         0x44 build/default/production/TMR32.o
  .debug_frame     0x000044         0x34 build/default/production/inputs.o
  .debug_frame     0x000078         0x64 build/default/production/interrupts.o
- .debug_frame     0x0000dc         0x34 build/default/production/motor.o
- .debug_frame     0x000110         0x84 build/default/production/statemachines.o
- .debug_frame     0x000194         0x34 build/default/production/cameraslide16blue.o
- .debug_frame     0x0001c8         0x64 build/default/production/UART1.o
- .debug_frame     0x00022c         0x44 build/default/production/ADC.o
+ .debug_frame     0x0000dc         0x44 build/default/production/motor.o
+ .debug_frame     0x000120         0x64 build/default/production/statemachines.o
+ .debug_frame     0x000184         0x34 build/default/production/cameraslide16blue.o
+ .debug_frame     0x0001b8         0x74 build/default/production/UART1.o
+ .debug_frame     0x00022c         0x34 build/default/production/ADC.o
 
-.debug_str        0x000000        0x3bb
+.debug_str        0x000000        0x3c1
  *(.debug_str)
  .debug_str       0x000000         0x35 build/default/production/TMR32.o
  .debug_str       0x000035         0x1a build/default/production/inputs.o
- .debug_str       0x00004f         0xab build/default/production/interrupts.o
- .debug_str       0x0000fa         0x27 build/default/production/motor.o
- .debug_str       0x000121         0xc6 build/default/production/statemachines.o
- .debug_str       0x0001e7         0x88 build/default/production/cameraslide16blue.o
- .debug_str       0x00026f         0xe6 build/default/production/UART1.o
- .debug_str       0x000355         0x66 build/default/production/ADC.o
+ .debug_str       0x00004f         0xcf build/default/production/interrupts.o
+ .debug_str       0x00011e         0x30 build/default/production/motor.o
+ .debug_str       0x00014e         0xb0 build/default/production/statemachines.o
+ .debug_str       0x0001fe         0x7f build/default/production/cameraslide16blue.o
+ .debug_str       0x00027d         0xde build/default/production/UART1.o
+ .debug_str       0x00035b         0x66 build/default/production/ADC.o
 
 .debug_loc
  *(.debug_loc)
@@ -482,24 +481,24 @@ __CONFIG1         0x0057fe          0x2
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x569
+                  0x000000        0x579
  *(.debug_pubnames)
  .debug_pubnames
                   0x000000         0x65 build/default/production/TMR32.o
  .debug_pubnames
                   0x000065         0x50 build/default/production/inputs.o
  .debug_pubnames
-                  0x0000b5         0x70 build/default/production/interrupts.o
+                  0x0000b5         0x9e build/default/production/interrupts.o
  .debug_pubnames
-                  0x000125         0x64 build/default/production/motor.o
+                  0x000153         0x77 build/default/production/motor.o
  .debug_pubnames
-                  0x000189        0x208 build/default/production/statemachines.o
+                  0x0001ca        0x1bf build/default/production/statemachines.o
  .debug_pubnames
-                  0x000391         0x43 build/default/production/cameraslide16blue.o
+                  0x000389         0x43 build/default/production/cameraslide16blue.o
  .debug_pubnames
-                  0x0003d4        0x147 build/default/production/UART1.o
+                  0x0003cc        0x170 build/default/production/UART1.o
  .debug_pubnames
-                  0x00051b         0x4e build/default/production/ADC.o
+                  0x00053c         0x3d build/default/production/ADC.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -539,13 +538,13 @@ __CONFIG1         0x0057fe          0x2
                   0x00001c          0x4 LONG 0x29a DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x29a DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x29a DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000022          0x4 LONG 0xf2c DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000022          0x4 LONG 0xb4a DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000024          0x4 LONG 0x29a DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000026          0x4 LONG 0x29a DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000028          0x4 LONG 0x29a DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002a          0x4 LONG 0xfb6 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002c          0x4 LONG 0xf50 DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00002e          0x4 LONG 0x1012 DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002a          0x4 LONG 0xbd4 DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002c          0x4 LONG 0xb6e DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00002e          0x4 LONG 0xcce DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000030          0x4 LONG 0x29a DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000032          0x4 LONG 0x29a DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000034          0x4 LONG 0x29a DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -667,13 +666,13 @@ __CONFIG1         0x0057fe          0x2
                   0x00011c          0x4 LONG 0x29a DEFINED (__AltInterrupt4)?ABSOLUTE (__AltInterrupt4):DEFINED (__Interrupt4)?ABSOLUTE (__Interrupt4):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x29a DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x29a DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x000122          0x4 LONG 0xf2c DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x000122          0x4 LONG 0xb4a DEFINED (__AltT2Interrupt)?ABSOLUTE (__AltT2Interrupt):DEFINED (__T2Interrupt)?ABSOLUTE (__T2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000124          0x4 LONG 0x29a DEFINED (__AltT3Interrupt)?ABSOLUTE (__AltT3Interrupt):DEFINED (__T3Interrupt)?ABSOLUTE (__T3Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000126          0x4 LONG 0x29a DEFINED (__AltSPI1ErrInterrupt)?ABSOLUTE (__AltSPI1ErrInterrupt):DEFINED (__SPI1ErrInterrupt)?ABSOLUTE (__SPI1ErrInterrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000128          0x4 LONG 0x29a DEFINED (__AltSPI1Interrupt)?ABSOLUTE (__AltSPI1Interrupt):DEFINED (__SPI1Interrupt)?ABSOLUTE (__SPI1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012a          0x4 LONG 0xfb6 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012c          0x4 LONG 0xf50 DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00012e          0x4 LONG 0x1012 DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012a          0x4 LONG 0xbd4 DEFINED (__AltU1RXInterrupt)?ABSOLUTE (__AltU1RXInterrupt):DEFINED (__U1RXInterrupt)?ABSOLUTE (__U1RXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012c          0x4 LONG 0xb6e DEFINED (__AltU1TXInterrupt)?ABSOLUTE (__AltU1TXInterrupt):DEFINED (__U1TXInterrupt)?ABSOLUTE (__U1TXInterrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00012e          0x4 LONG 0xcce DEFINED (__AltADC1Interrupt)?ABSOLUTE (__AltADC1Interrupt):DEFINED (__ADC1Interrupt)?ABSOLUTE (__ADC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000130          0x4 LONG 0x29a DEFINED (__AltInterrupt14)?ABSOLUTE (__AltInterrupt14):DEFINED (__Interrupt14)?ABSOLUTE (__Interrupt14):ABSOLUTE (__DefaultInterrupt)
                   0x000132          0x4 LONG 0x29a DEFINED (__AltInterrupt15)?ABSOLUTE (__AltInterrupt15):DEFINED (__Interrupt15)?ABSOLUTE (__Interrupt15):ABSOLUTE (__DefaultInterrupt)
                   0x000134          0x4 LONG 0x29a DEFINED (__AltSI2C1Interrupt)?ABSOLUTE (__AltSI2C1Interrupt):DEFINED (__SI2C1Interrupt)?ABSOLUTE (__SI2C1Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1320,173 +1319,168 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x0000c0        0x57b
+                  0x0000c0        0x5b4
  .debug_pubtypes
                   0x0000c0         0x9e build/default/production/TMR32.o
  .debug_pubtypes
                   0x00015e         0x47 build/default/production/inputs.o
  .debug_pubtypes
-                  0x0001a5         0x71 build/default/production/interrupts.o
+                  0x0001a5         0x8a build/default/production/interrupts.o
  .debug_pubtypes
-                  0x000216         0x45 build/default/production/motor.o
+                  0x00022f         0x62 build/default/production/motor.o
  .debug_pubtypes
-                  0x00025b         0x5e build/default/production/statemachines.o
+                  0x000291         0x7b build/default/production/statemachines.o
  .debug_pubtypes
-                  0x0002b9        0x1aa build/default/production/cameraslide16blue.o
+                  0x00030c        0x177 build/default/production/cameraslide16blue.o
  .debug_pubtypes
-                  0x000463         0xc6 build/default/production/UART1.o
+                  0x000483         0xdf build/default/production/UART1.o
  .debug_pubtypes
-                  0x000529        0x112 build/default/production/ADC.o
+                  0x000562        0x112 build/default/production/ADC.o
 
 __c30_signature
-                  0x00063b         0x7e
+                  0x000674         0x7e
  __c30_signature
-                  0x00063b          0x6 build/default/production/TMR32.o
+                  0x000674          0x6 build/default/production/TMR32.o
  __c30_signature
-                  0x000641          0x6 build/default/production/inputs.o
+                  0x00067a          0x6 build/default/production/inputs.o
  __c30_signature
-                  0x000647          0x6 build/default/production/interrupts.o
+                  0x000680          0x6 build/default/production/interrupts.o
  __c30_signature
-                  0x00064d          0x6 build/default/production/motor.o
+                  0x000686          0x6 build/default/production/motor.o
  __c30_signature
-                  0x000653          0x6 build/default/production/statemachines.o
+                  0x00068c          0x6 build/default/production/statemachines.o
  __c30_signature
-                  0x000659          0x6 build/default/production/cameraslide16blue.o
+                  0x000692          0x6 build/default/production/cameraslide16blue.o
  __c30_signature
-                  0x00065f          0x6 build/default/production/UART1.o
+                  0x000698          0x6 build/default/production/UART1.o
  __c30_signature
-                  0x000665          0x6 build/default/production/ADC.o
+                  0x00069e          0x6 build/default/production/ADC.o
  __c30_signature
-                  0x00066b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
+                  0x0006a4          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x000671          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
+                  0x0006aa          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x000677          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
+                  0x0006b0          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsf3.eo)
  __c30_signature
-                  0x00067d          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
+                  0x0006b6          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(divsi3.eo)
  __c30_signature
-                  0x000683          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
+                  0x0006bc          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fixunssfsi.eo)
  __c30_signature
-                  0x000689          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
+                  0x0006c2          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatunsisf.eo)
  __c30_signature
-                  0x00068f          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
+                  0x0006c8          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(fpack.eo)
  __c30_signature
-                  0x000695          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
+                  0x0006ce          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack.eo)
  __c30_signature
-                  0x00069b          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
+                  0x0006d4          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(funpack2.eo)
  __c30_signature
-                  0x0006a1          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
+                  0x0006da          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(futil.eo)
  __c30_signature
-                  0x0006a7          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
+                  0x0006e0          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(mulsf3.eo)
  __c30_signature
-                  0x0006ad          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
+                  0x0006e6          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x0006b3          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
+                  0x0006ec          0x6 c:/program files (x86)/microchip/xc16/v1.24/bin/bin/../../lib\libm-elf.a(floatundisf.eo)
 
-.nbss               0x0800         0xde
- .nbss              0x0800         0x80 build/default/production/UART1.o
+.nbss               0x0800         0xb2
+ .nbss              0x0800         0x58 build/default/production/UART1.o
                     0x0800                  _UART1_txBuffer
                     0x0828                  _UART1_txBufferCount
                     0x0829                  _UART1_txBufferWritePos
                     0x082a                  _UART1_txBufferReadPos
-                    0x082b                  _UART1_rxBuffer
-                    0x0853                  _UART1_rxBufferCount
-                    0x0854                  _UART1_rxBufferWritePos
-                    0x0855                  _UART1_rxBufferReadPos
-                    0x0856                  _UART1_rxFlag
-                    0x0857                  _read
- .nbss              0x0880         0x46 build/default/production/statemachines.o
-                    0x0880                  _tShutterStart
-                    0x0886                  _tCurr
-                    0x088c                  _processTime
-                    0x088e                  _shutterTime
-                    0x0890                  _lastPic
-                    0x0892                  _currPic
-                    0x0894                  _totPics
-                    0x0896                  _stepsPerInt
-                    0x0898                  _startPos
-                    0x089a                  _currPos
-                    0x089c                  _nextPos
-                    0x089e                  _homePos
-                    0x08a0                  _awayPos
-                    0x08a2                  _radius
-                    0x08a4                  _length
-                    0x08a6                  _mainState
-                    0x08a7                  _runState
-                    0x08a8                  _travDir
-                    0x08a9                  _movingFlag
-                    0x08aa                  _shutterFlag
-                    0x08ab                  _picFlag
-                    0x08ac                  _readCmdFlag
-                    0x08ad                  _readValFlag
-                    0x08ae                  _cmdBufferCount
-                    0x08af                  _cmdBuffer
-                    0x08c4                  _tempCmd
- .nbss              0x08c6          0xe build/default/production/inputs.o
-                    0x08c6                  _inputStartTimes
-                    0x08d2                  _j
- .nbss              0x08d4          0xa build/default/production/motor.o
-                    0x08d4                  _motor_speed
-                    0x08d6                  _motor_stepsPerRev
-                    0x08d8                  _tPrev
+                    0x082b                  _UART1_cmdFlag
+                    0x082c                  _UART1_cmdBuffer
+                    0x0854                  _UART1_cmdBufferCount
+                    0x0855                  _UART1_cmdBufferWritePos
+                    0x0856                  _UART1_cmdBufferReadPos
+ .nbss              0x0858         0x3a build/default/production/statemachines.o
+                    0x0858                  _tShutterStart
+                    0x085e                  _tCurr
+                    0x0864                  _processTime
+                    0x0866                  _shutterTime
+                    0x0868                  _lastPic
+                    0x086a                  _currPic
+                    0x086c                  _totPics
+                    0x086e                  _stepsPerInt
+                    0x0870                  _startPos
+                    0x0872                  _currPos
+                    0x0874                  _nextPos
+                    0x0876                  _homePos
+                    0x0878                  _awayPos
+                    0x087a                  _radius
+                    0x087c                  _length
+                    0x087e                  _mainState
+                    0x087f                  _runState
+                    0x0880                  _travDir
+                    0x0881                  _movingFlag
+                    0x0882                  _shutterFlag
+                    0x0883                  _picFlag
+                    0x0884                  _readCmdFlag
+                    0x0885                  _readValFlag
+                    0x0886                  _tStart
+                    0x088c                  _tNow
+ .nbss              0x0892          0xe build/default/production/inputs.o
+                    0x0892                  _inputStartTimes
+                    0x089e                  _j
+ .nbss              0x08a0          0xa build/default/production/motor.o
+                    0x08a0                  _motor_speed
+                    0x08a2                  _motor_stepsPerRev
+                    0x08a4                  _tPrev
+ .nbss              0x08aa          0x8 build/default/production/interrupts.o
+                    0x08aa                  _startFlag
+                    0x08ab                  _msgFlag
+                    0x08ac                  _valFlag
+                    0x08ae                  _cmd
 
-.ndata              0x08de          0x6
- .ndata             0x08de          0x6 build/default/production/TMR32.o
-                    0x08de                  _tReset
+.ndata              0x08b2          0xa
+ .ndata             0x08b2          0x6 build/default/production/TMR32.o
+                    0x08b2                  _tReset
+ .ndata             0x08b8          0x4 build/default/production/UART1.o
+                    0x08b8                  _resetCmd
 
-.nbss               0x08e4          0x2
- .nbss              0x08e4          0x2 build/default/production/TMR32.o
-                    0x08e4                  _TMR32_overflows
+.nbss               0x08bc          0x4
+ .nbss              0x08bc          0x2 build/default/production/TMR32.o
+                    0x08bc                  _TMR32_overflows
+ .nbss              0x08be          0x2 build/default/production/ADC.o
+                    0x08be                  _ADC_flag
 
-.ndata              0x08e6          0x2
- .ndata             0x08e6          0x2 build/default/production/statemachines.o
-                    0x08e6                  _resetCmd
+.text             0x000506        0xd78
+ .text            0x000506        0x63c build/default/production/statemachines.o
+                  0x000506                  _SM_mainStateMachine
+                  0x0005b0                  _SM_runStateMachine
+                  0x000816                  _SM_parseNextCommand
+                  0x000a30                  _SM_init
+                  0x000aea                  _SM_heartbeat
+ .text            0x000b42        0x1ac build/default/production/interrupts.o
+                  0x000b42                  _interrupts_init
+                  0x000b4a                  __T2Interrupt
+                  0x000b6e                  __U1TXInterrupt
+                  0x000bd4                  __U1RXInterrupt
+                  0x000cce                  __ADC1Interrupt
+ .text            0x000cee        0x186 build/default/production/TMR32.o
+                  0x000cee                  _TMR32_timeDiff
+                  0x000e04                  _TMR32_getTime
+                  0x000e48                  _TMR32_init
+ .text            0x000e74        0x182 build/default/production/UART1.o
+                  0x000e74                  _UART1_init
+                  0x000ec0                  _UART1_writeLine
+                  0x000ef0                  _UART1_writeChar
+                  0x000f42                  _UART1_readCommand
+                  0x000fa6                  _UART1_sendCommand
+                  0x000fd0                  _UART1_flushCommands
+ .text            0x000ff6         0xe0 build/default/production/motor.o
+                  0x000ff6                  _moveSingleStep
+                  0x0010a2                  _motor_setSpeed
+                  0x0010ae                  _motor_init
+ .text            0x0010d6         0x9c build/default/production/inputs.o
+                  0x0010d6                  _checkInputState
+                  0x001136                  _inputs_init
+ .text            0x001172         0x86 build/default/production/cameraslide16blue.o
+                  0x001172                  _main
+                  0x00117a                  _main_init
+ .text            0x0011f8         0x86 build/default/production/ADC.o
+                  0x0011f8                  _ADC_init
+                  0x00126c                  _ADC_rawValue
 
-.nbss               0x08e8          0x2
- .nbss              0x08e8          0x2 build/default/production/ADC.o
-                    0x08e8                  _ADC_flag
-
-.const              0x8506          0xa load address 0x000506  
- .const             0x8506          0xa build/default/production/cameraslide16blue.o
-
-.text             0x000510        0xdd2
- .text            0x000510        0x684 build/default/production/statemachines.o
-                  0x000510                  _SM_mainStateMachine
-                  0x0005c6                  _SM_runStateMachine
-                  0x0007ba                  _parseNextCommand
-                  0x000994                  _readCommand
-                  0x000a2c                  _sendCommand
-                  0x000a4c                  _checkCommandBuffer
-                  0x000af8                  _SM_init
- .text            0x000b94        0x20a build/default/production/UART1.o
-                  0x000b94                  _UART1_init
-                  0x000be0                  _UART1_writeLine
-                  0x000c10                  _UART1_writeChar
-                  0x000c62                  _UART1_readLine
-                  0x000ce2                  _UART1_update
- .text            0x000d9e        0x186 build/default/production/TMR32.o
-                  0x000d9e                  _TMR32_timeDiff
-                  0x000eb4                  _TMR32_getTime
-                  0x000ef8                  _TMR32_init
- .text            0x000f24        0x10e build/default/production/interrupts.o
-                  0x000f24                  _interrupts_init
-                  0x000f2c                  __T2Interrupt
-                  0x000f50                  __U1TXInterrupt
-                  0x000fb6                  __U1RXInterrupt
-                  0x001012                  __ADC1Interrupt
- .text            0x001032         0xdc build/default/production/cameraslide16blue.o
-                  0x001032                  _main
-                  0x001088                  _main_init
- .text            0x00110e         0xce build/default/production/motor.o
-                  0x00110e                  _moveSingleStep
-                  0x0011b4                  _motor_init
- .text            0x0011dc         0x9c build/default/production/inputs.o
-                  0x0011dc                  _checkInputState
-                  0x00123c                  _inputs_init
- .text            0x001278         0x6a build/default/production/ADC.o
-                  0x001278                  _ADC_init
-                  0x0012cc                  _ADC_newValue
-                  0x0012d8                  _ADC_rawValue
-
-.dinit            0x0012e2         0x38
- .dinit           0x0012e2         0x38 data_init
+.dinit            0x00127e         0x40
+ .dinit           0x00127e         0x40 data_init

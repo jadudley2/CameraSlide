@@ -14,14 +14,13 @@ unsigned char UART1_txBufferWritePos = 0;   // write position in UART1_txBuffer
 unsigned char UART1_txBufferReadPos = 0;    // read position in UART1_txBuffer
 
 // Receive (user-defined) buffer variables
-unsigned char UART1_rxBuffer[UART1_RX_BUFFER_SIZE]; // UART1 rx buffer
-unsigned char UART1_rxBufferCount = 0;      // how many bytes in UART1_rxBuffer
-unsigned char UART1_rxBufferWritePos = 0;   // write position in UART1_rxBuffer
-unsigned char UART1_rxBufferReadPos = 0;    // read position in UART1_rxBuffer
+unsigned char UART1_cmdFlag;
+command UART1_cmdBuffer[UART1_CMD_BUFFER_SIZE];
+unsigned char UART1_cmdBufferCount = 0;
+unsigned char UART1_cmdBufferWritePos = 0;
+unsigned char UART1_cmdBufferReadPos = 0;
 
-unsigned char UART1_rxFlag = 0;
-
-unsigned char read[UART1_RX_BUFFER_SIZE];
+command resetCmd = {MSG_BLANK, 0x00};
 
 void UART1_init() {
     // set uart registers
@@ -72,71 +71,33 @@ void UART1_writeChar(unsigned char chr) {
     }
 }
 
-unsigned char* UART1_readLine(unsigned char len) {
-    // bound length
-    if ((len == 0) || (len > UART1_rxBufferCount)) {
-        len = UART1_rxBufferCount;
+command UART1_readCommand(void) {
+    command cmd = resetCmd;
+    
+    if (UART1_cmdBufferCount > 0) {
+        cmd = UART1_cmdBuffer[UART1_cmdBufferReadPos];
+        UART1_cmdBufferCount--;
+        UART1_cmdBufferReadPos++;
+        if (UART1_cmdBufferReadPos >= UART1_CMD_BUFFER_SIZE) {
+            UART1_cmdBufferReadPos = 0;
+        }
+    }
+
+    if (UART1_cmdBufferCount == 0) {
+        UART1_cmdFlag = 0;
     }
     
-    // transfer number of desired bytes to data array
-    unsigned char i;
-    for (i = 0; i < len; i++) {
-        read[i] = UART1_rxBuffer[UART1_rxBufferReadPos];
-        UART1_rxBuffer[UART1_rxBufferReadPos] = 0;
-        UART1_rxBufferCount--;
-        UART1_rxBufferReadPos++;
-        // check for buffer read pos wraparound
-        if (UART1_rxBufferReadPos >= UART1_RX_BUFFER_SIZE) {
-            UART1_rxBufferReadPos = 0;
-        }
-    }
-
-    return &read[0];
+    return cmd;
 }
 
-unsigned char UART1_update(void) {
-    // send next bit, if there's more in the buffer
-    if (UART1_txBufferCount > 0) {
-        // make sure transmit buffer isn't full
-        if (U1STAbits.UTXBF != 1) {
-            // check for buffer read wraparound
-            if (UART1_txBufferReadPos >= UART1_TX_BUFFER_SIZE) {
-                UART1_txBufferReadPos = 0;
-            }
+void UART1_sendCommand(unsigned char cmd, int val) {
+    unsigned char line[] = {MSG_START_BYTE,cmd,val>>8,val,MSG_END_BYTE};
+    UART1_writeLine(&line[0],5);
+}
 
-            // set tx enable bit
-            U1STAbits.UTXEN = 1;
-
-            // write next char to tx reg
-            U1TXREG = UART1_txBuffer[UART1_txBufferReadPos];
-            UART1_txBufferCount--;      // decrement buffer byte count
-            UART1_txBufferReadPos++;    // increment buffer read pos
-        }
-    }
-
-    // check if rx interrupt has occurred
-    if (UART1_rxFlag == 1) {
-        UART1_rxFlag = 0;
-
-        // check for buffer overflow
-        if (U1STAbits.OERR == 1) {
-            U1STAbits.OERR = 0;     // reset buffer flag
-        }
-
-        // read through entire rx fifo buffer
-        while (U1STAbits.URXDA != 0) {
-            // read buffered rx data into soft buffer
-            UART1_rxBuffer[UART1_rxBufferWritePos] = U1RXREG;
-            UART1_rxBufferCount++;      // increment buffer byte count
-            UART1_rxBufferWritePos++;   // increment buffer write pos
-
-            // check for right pos wraparound
-            if (UART1_rxBufferWritePos >= UART1_RX_BUFFER_SIZE) {
-                UART1_rxBufferWritePos = 0;
-            }
-        }
-    }
-
-    // return the number of bytes in rx soft buffer
-    return UART1_rxBufferCount;
+void UART1_flushCommands(void) {
+    UART1_cmdFlag = 0;
+    UART1_cmdBufferCount = 0;
+    UART1_cmdBufferReadPos = 0;
+    UART1_cmdBufferWritePos = 0;
 }

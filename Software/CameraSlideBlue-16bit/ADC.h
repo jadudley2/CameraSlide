@@ -12,7 +12,7 @@
 
 void ADC_init(void);
 
-int ADC_rawValue(void);
+unsigned int ADC_rawValue(void);
 
 #endif	/* ADC_H */
 

@@ -19,6 +19,8 @@
  */
 unsigned char moveSingleStep(unsigned char dir);
 
+void motor_setSpeed(unsigned int spd);
+
 void motor_init(unsigned int spd, unsigned int stepsPerRev);
 
 #endif	/* MOTOR_H */

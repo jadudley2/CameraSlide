@@ -12,7 +12,12 @@
 #include "TMR32.h"
 
 #define UART1_TX_BUFFER_SIZE        40
-#define UART1_RX_BUFFER_SIZE        40
+#define UART1_CMD_BUFFER_SIZE       10
+
+typedef struct commands {
+    unsigned char command;
+    int value;
+} command;
 
 void UART1_init(void);
 
@@ -20,9 +25,11 @@ void UART1_writeLine(unsigned char* data, unsigned char len);
 
 void UART1_writeChar(unsigned char chr);
 
-unsigned char* UART1_readLine(unsigned char len);
+command UART1_readCommand(void);
 
-unsigned char UART1_update(void);
+void UART1_sendCommand(unsigned char cmd, int val);
+
+void UART1_flushCommands(void);
 
 #endif	/* UART1_H */
 

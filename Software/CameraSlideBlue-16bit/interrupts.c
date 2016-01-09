@@ -13,11 +13,18 @@ extern unsigned char UART1_txBufferCount;
 extern unsigned char UART1_txBufferReadPos;
 extern unsigned char UART1_txBuffer[UART1_TX_BUFFER_SIZE];
 
-extern unsigned char UART1_rxBuffer[UART1_RX_BUFFER_SIZE];
-extern unsigned char UART1_rxBufferWritePos;
-extern unsigned char UART1_rxBufferCount;
+extern unsigned char UART1_cmdFlag;
+extern unsigned char UART1_cmdBufferCount;
+extern unsigned char UART1_cmdBufferWritePos;
+extern command UART1_cmdBuffer[UART1_CMD_BUFFER_SIZE];
+extern command resetCmd;
 
 extern unsigned char ADC_flag;
+
+unsigned char startFlag = 0;
+unsigned char msgFlag = 0;
+unsigned char valFlag = 0;
+command cmd = {0,0};
 
 void interrupts_init() {
     INTCON1bits.NSTDIS = 1;             // disable nested interrupts
@@ -59,14 +66,33 @@ void __attribute__((__interrupt__, auto_psv)) _U1RXInterrupt(void) {
         U1STAbits.OERR = 0;     // reset buffer flag
     }
 
-    // read buffered rx data into soft buffer
-    UART1_rxBuffer[UART1_rxBufferWritePos] = U1RXREG;
-    UART1_rxBufferCount++;      // increment buffer byte count
-    UART1_rxBufferWritePos++;   // increment buffer write pos
+    // read buffered rx data
+    unsigned char chr = U1RXREG;
 
-    // check for write pos wraparound
-    if (UART1_rxBufferWritePos >= UART1_RX_BUFFER_SIZE) {
-        UART1_rxBufferWritePos = 0;
+    if (startFlag == 0) {
+        msgFlag = 0;
+        valFlag = 0;
+        if (chr == MSG_START_BYTE) {
+            startFlag = 1;
+            cmd = resetCmd;
+        }
+    } else if (msgFlag == 0 && valFlag == 0) {
+        cmd.command = chr;
+        msgFlag = 1;
+    } else if (msgFlag == 1 && valFlag == 0) {
+        cmd.value = chr;
+        valFlag = 1;
+    } else if (msgFlag == 1 && valFlag == 1) {
+        if (chr == MSG_END_BYTE) {
+            UART1_cmdBuffer[UART1_cmdBufferWritePos] = cmd;
+            UART1_cmdBufferWritePos++;
+            if (UART1_cmdBufferWritePos >= UART1_CMD_BUFFER_SIZE) {
+                UART1_cmdBufferWritePos = 0;
+            }
+            UART1_cmdBufferCount++;
+            UART1_cmdFlag = 1;      // notify new command in buffer
+        }
+        startFlag = 0;
     }
 }
 

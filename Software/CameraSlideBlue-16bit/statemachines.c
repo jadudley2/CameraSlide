@@ -10,29 +10,38 @@
 extern timeObj tReset;
 timeObj tShutterStart, tCurr;
 
+extern unsigned char UART1_cmdFlag;
+
 extern unsigned int motor_stepsPerRev;
 extern unsigned int motor_speed;
 unsigned int processTime, shutterTime, lastPic, currPic, totPics, stepsPerInt,
         startPos, currPos, nextPos, homePos, awayPos, radius, length;
 
 unsigned char mainState, runState, travDir, movingFlag, shutterFlag, picFlag,
-        readCmdFlag, readValFlag, cmdBufferCount;
+        readCmdFlag, readValFlag;
 
-command cmdBuffer[CMD_BUFFER_SIZE];
-command resetCmd = {MSG_BLANK, 0x00};
-command tempCmd;
+timeObj tStart, tNow;
 
 void SM_mainStateMachine(void) {
-    while (1) {
-        parseNextCommand();
+    motor_init(MOTOR_SPEED, MOTOR_STEPS_PER_REV);
+    SM_init();
 
+    while (1) {
+        SM_heartbeat();
+        SM_parseNextCommand();
+
+        if (ADC_rawValue() < VOLTAGE_THRESHOLD) {
+            PWR_LED_PIN = LO;
+        } else {
+            PWR_LED_PIN = HI;
+        }
+        
         switch (mainState) {
             case STARTUP:
                 mainState = IDLE;
             case IDLE:
-            case FOCUS:
-                // wait for command
-                break;
+            case FOCUS:     // wait for next command
+                break;      
             case MOVING_TO_HOME:
             case MOVING_TO_START:
                 movingFlag = HI;
@@ -42,28 +51,20 @@ void SM_mainStateMachine(void) {
                     if (mainState == MOVING_TO_HOME) {
                         currPos = homePos;      // at home
                         mainState = IDLE;       // go to idle state
-                        sendCommand(MSG_MOVE_HOME, 0x00);
+                        UART1_sendCommand(MSG_MOVE_HOME, 0);
                     } else {
                         currPos = startPos;     // at start
                         mainState = FOCUS;      // go to focusing state
-                        sendCommand(MSG_MOVE_START, 0x00);
+                        UART1_sendCommand(MSG_MOVE_START, 0);
                     }
                 } else {    // keep moving
                     moveSingleStep(travDir);
                 }
                 break;
             case RUNNING:
-                // clear all running flags and times
-                shutterFlag = LO;
-                movingFlag = LO;
-                tShutterStart = tReset;
-                currPic = 1;
-                
-                // intialize running state to taking pic
-                runState = R_TAKING_PIC;
-
                 // run the running state machine
                 SM_runStateMachine();
+                SYS_LED_PIN = LO;
                 break;
             default:
                 // invalid main state option
@@ -73,32 +74,46 @@ void SM_mainStateMachine(void) {
 }
 
 void SM_runStateMachine(void) {
-    sendCommand(MSG_TAKING_PIC, currPic);      // starts with taking pic
+    // clear all running flags and times
+    shutterFlag = LO;
+    movingFlag = LO;
+    tShutterStart = tReset;
+    currPic = 1;
+
+    // intialize running state to taking pic
+    runState = R_TAKING_PIC;
     
     while (mainState == RUNNING) {
-        parseNextCommand();
+        SM_heartbeat();
+        SM_parseNextCommand();
+
+        if (ADC_rawValue() < VOLTAGE_THRESHOLD) {
+            PWR_LED_PIN = LO;
+        } else {
+            PWR_LED_PIN = HI;
+        }
         
         switch (runState) {
             case R_TAKING_PIC:
                 if (shutterFlag == LO) {
                     if (picFlag == LO) {
+                        UART1_sendCommand(MSG_TAKING_PIC,currPic);
                         SHUTTER_PIN = HI;               // initiate shutter
                         shutterFlag = HI;                  // shutter has been pressed
                         tShutterStart = TMR32_getTime();    // start shutter debounce
                     } else {
-                        if (TMR32_timeDiff(TMR32_getTime(), tShutterStart, MSEC) > shutterTime) {
+                        if (TMR32_timeDiff(TMR32_getTime(),tShutterStart,MSEC) >= shutterTime) {
                             movingFlag = LO;            // get ready to move
                             currPic++;                  // pic has been snapped
                             picFlag = LO;
                             runState = R_TRAVELLING;    // move to next position
-                            sendCommand(MSG_MOVING, 0x00);
                         } else {
                             // wait for pic to be taken
                         }
                     }
                 } else if (shutterFlag == HI) {        // shutter is being pressed
                     // check if shutter has been held long enough
-                    if (TMR32_timeDiff(TMR32_getTime(), tShutterStart, MSEC) > DEBOUNCE_TIME) {
+                    if (TMR32_timeDiff(TMR32_getTime(),tShutterStart, MSEC) > DEBOUNCE_TIME) {
                         SHUTTER_PIN = LO;           // release shutter
                         shutterFlag = LO;              // shutter no longer pressed
                         picFlag = HI;
@@ -110,6 +125,7 @@ void SM_runStateMachine(void) {
             case R_TRAVELLING:
                 // check if moving
                 if (movingFlag == LO) {
+                    UART1_sendCommand(MSG_MOVING,travDir);
                     if (travDir == AWAY) {
                         nextPos = currPos + stepsPerInt;
                         if (nextPos > awayPos) {
@@ -117,6 +133,7 @@ void SM_runStateMachine(void) {
                         }
                     } else {
                         nextPos = currPos - stepsPerInt;
+                        UART1_sendCommand(currPos,nextPos);
                         if (nextPos < homePos) {
                             nextPos = homePos;
                         }
@@ -124,10 +141,19 @@ void SM_runStateMachine(void) {
 
                     // start to move
                     movingFlag = HI;
-                    if (moveSingleStep(travDir)) {
-                        currPos++;
+                    if (checkInputState(travDir) != HI) {
+                        if (moveSingleStep(travDir)) {
+                            if (travDir == AWAY) {
+                                currPos++;
+                            } else {
+                                currPos--;
+                            }
+                        }
+                    } else {
+                        mainState = IDLE;
                     }
                 } else {
+                    //TODO: check limit switch to see if we're at the end
                     // check if at next position
                     if (currPos != nextPos) {
                         if(moveSingleStep(travDir)) {
@@ -136,20 +162,20 @@ void SM_runStateMachine(void) {
                     } else {
                         movingFlag = LO;
                         runState = R_PROCESSING;
-                        sendCommand(MSG_PROCESSING, 0x00);
+                        UART1_sendCommand(MSG_PROCESSING, 0);
                     }
                 }
                 break;
             case R_PROCESSING:
                 // check if done processing last pic
-                if (TMR32_timeDiff(TMR32_getTime(), tShutterStart, MSEC) >= processTime) {
+                if (TMR32_timeDiff(TMR32_getTime(),tShutterStart,MSEC) >= processTime) {
                     // clear shutter flag and start time
                     shutterFlag = LO;
                     tShutterStart = tReset;
                     if (currPic <= totPics) {
                         // get ready to take next pic
                         runState = R_TAKING_PIC;
-                        sendCommand(MSG_TAKING_PIC, currPic);
+                        UART1_sendCommand(MSG_TAKING_PIC, currPic);
                     } else {
                         currPic = 1;
                         mainState = IDLE;
@@ -165,18 +191,20 @@ void SM_runStateMachine(void) {
     }
 }
 
-void parseNextCommand(void) {
+void SM_parseNextCommand(void) {
     // check if any commands in buffer
-    if (checkCommandBuffer() != 0) {
-        command cmd = readCommand(0);
+    if (UART1_cmdFlag != 0) {
+        command cmd = UART1_readCommand();
         if (mainState != RUNNING) {
             switch (cmd.command) {
                 case MSG_PICS:
                     totPics = cmd.value;
                     stepsPerInt = awayPos / totPics;
+                    UART1_sendCommand(ACK_SUCCESS,MSG_PICS);
                     break;
                 case MSG_SHUTTER:
                     shutterTime = cmd.value;
+                    UART1_sendCommand(ACK_SUCCESS,MSG_SHUTTER);
                     break;
                 case MSG_PROCESS:
                     processTime = cmd.value;
@@ -186,6 +214,16 @@ void parseNextCommand(void) {
                     break;
                 case MSG_DIRECTION:
                     travDir = cmd.value;
+                    switch (travDir) {
+                        case HOME:
+                            startPos = awayPos;
+                            break;
+                        case AWAY:
+                            startPos = homePos;
+                            break;
+                        default:
+                            UART1_sendCommand(ACK_FAILURE,0);
+                    }
                     break;
                 case MSG_SLIDE_LENGTH:
                     length = cmd.value;
@@ -203,7 +241,11 @@ void parseNextCommand(void) {
                     stepsPerInt = awayPos / totPics;
                     break;
                 case MSG_RUN:
-                    mainState = MOVING_TO_START;
+                    if (mainState == IDLE) {
+                        mainState = MOVING_TO_START;
+                    } else {
+                        mainState = RUNNING;
+                    }
                     break;
                 case MSG_ABORT:
                     movingFlag = LO;
@@ -213,10 +255,10 @@ void parseNextCommand(void) {
                     mainState = MOVING_TO_HOME;
                     break;
                  case MSG_BLANK:
-                    sendCommand(ACK_INVALID, cmd.command);
+                    UART1_sendCommand(ACK_INVALID,cmd.command);
                     return;
                  default:
-                    sendCommand(ACK_UNKNOWN, cmd.command);
+                    UART1_sendCommand(ACK_UNKNOWN,cmd.command);
                     return;
             }
         } else {
@@ -227,81 +269,21 @@ void parseNextCommand(void) {
                     mainState = IDLE;
                     break;
                  case MSG_BLANK:
-                    sendCommand(ACK_INVALID, cmd.command);
+                    UART1_sendCommand(ACK_INVALID,cmd.command);
                     return;
                  default:
-                    sendCommand(ACK_UNKNOWN, cmd.command);
+                    UART1_sendCommand(ACK_UNKNOWN,cmd.command);
                     return;
             }
         }
-        sendCommand(ACK_SUCCESS, 0x00);
+        UART1_sendCommand(ACK_SUCCESS,cmd.command);
     }
-}
-
-command readCommand(unsigned char pos) {
-    if ((pos + 1) <= cmdBufferCount) {
-        command cmd = cmdBuffer[pos];   // retrieve requested command
-        // move commands remaining in buffer forward
-        unsigned char j;
-        for (j = pos; j < cmdBufferCount; j++) {
-            cmdBuffer[pos] = cmdBuffer[pos + 1];
-        }
-        cmdBuffer[cmdBufferCount - 1] = resetCmd;
-        cmdBufferCount--;       // decrement buffer count
-        return cmd;
-    } else {
-        return resetCmd;        // return blank if pos outside of populated data
-    }
-}
-
-void sendCommand(unsigned char msg, unsigned char val) {
-    unsigned char bytes[4];
-    bytes[0] = MSG_START_BYTE;
-    bytes[1] = msg;
-    bytes[2] = val;
-    bytes[3] = MSG_END_BYTE;
-    UART1_writeLine(bytes,sizeof(bytes));
-}
-
-unsigned char checkCommandBuffer(void) {
-    unsigned char num = UART1_update();
-    if (num > 0) {
-        // read available byte from uart
-        unsigned char chr = UART1_readLine(1)[0];
-        // check if start command byte
-        if (chr == MSG_START_BYTE) {
-            if ((readCmdFlag|readValFlag) == HI) {
-                // error
-            } else {
-                tempCmd = resetCmd;     // get ready to receive command
-                readCmdFlag = HI;       // read command bytes first
-            }
-        // check if reading command
-        } else if (readCmdFlag == HI) {
-            tempCmd.command = chr;      // write byte to command
-            readCmdFlag = LO;           // done reading command
-            readValFlag = HI;           // reading val now
-        // check if reading value
-        } else if (readValFlag == HI) {
-            tempCmd.value = chr;        // write byte to value
-            readValFlag = LO;           // done reading val
-        // check if end byte
-        } else if (chr == MSG_END_BYTE) {
-            if ((readCmdFlag|readValFlag) == HI) {
-                // error
-            } else {
-                cmdBuffer[cmdBufferCount] = tempCmd;    // add cmd to buffer
-            }
-        }
-    }
-    return cmdBufferCount;
 }
 
 void SM_init(void) {
     currPic = 1;
     lastPic = currPic;
-    totPics = TOTAL_PICS;           // init total pics as 40
-    
+    totPics = TOTAL_PICS;           // init total pics
     travDir = AWAY;                 // init travel direction as away from home
     awayPos = SLIDE_LENGTH * motor_stepsPerRev / (2 * PI * PULLEY_RADIUS);
     radius = PULLEY_RADIUS;
@@ -313,8 +295,8 @@ void SM_init(void) {
     currPos = homePos;              // guess current position is at home
     nextPos = homePos + stepsPerInt;   // init next position variable
     
-    processTime = PROCESS_TIME;        // init processing time
-    shutterTime = SHUTTER_TIME;     // init shutter time as 1 ms (round up)
+    processTime = PROCESS_TIME;     // init processing time
+    shutterTime = SHUTTER_TIME;     // init shutter time
 
     mainState = STARTUP;            // current state is startup
     runState = R_TAKING_PIC;        // first run state is taking pic
@@ -322,5 +304,22 @@ void SM_init(void) {
     picFlag = LO;
     movingFlag = LO;
 
+    tStart = TMR32_getTime();
+    tNow = tStart;
+
+    SYS_LED_PIN = LO;
+    PWR_LED_PIN = LO;
+
     inputs_init();
+}
+
+void SM_heartbeat(void) {
+    // heartbeat
+    tNow = TMR32_getTime();
+    if (TMR32_timeDiff(tStart,tNow,MSEC) >= HB_INTERVAL) {
+        HB_LED_PIN = ~HB_LED_PIN;
+//        UART1_sendCommand(MSG_HEARTBEAT,0);
+        // TODO: get HB response (in parseNextCommand?)
+        tStart = tNow;
+    }
 }

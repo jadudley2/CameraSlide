@@ -53,7 +53,7 @@
 #define CMD_BUFFER_SIZE     10
 
 /* motor defaults */
-#define MOTOR_SPEED         10
+#define MOTOR_SPEED         80
 #define MOTOR_STEPS_PER_REV 200
 
 /* hardware defaults */
@@ -61,27 +61,29 @@
 #define SLIDE_LENGTH        914.4           // mm (914.4 mm = 36 in)
 
 /* other defaults */
-#define SHUTTER_TIME        1               // ms
-#define PROCESS_TIME        1               // ms
+#define SHUTTER_TIME        1000               // ms
+#define PROCESS_TIME        1000               // ms
 #define TOTAL_PICS          40              
-
+#define HB_INTERVAL         500            // ms
+#define VOLTAGE_THRESHOLD   250             // out of 1024, scaled to 9.9V
 
 #define MSG_START_BYTE      0x21
 #define MSG_END_BYTE        0x22
 
-#define MSG_BLANK           0x33
-#define MSG_PICS            0x34
-#define MSG_SHUTTER         0x35
-#define MSG_PROCESS         0x36
-#define MSG_SPEED           0x37
-#define MSG_DIRECTION       0x38
-#define MSG_SLIDE_LENGTH    0x39
-#define MSG_RADIUS          0x3A
-#define MSG_ANG_STEP        0x3B
-#define MSG_RUN             0x3C
-#define MSG_ABORT           0x3D
-#define MSG_MOVE_HOME       0x3E
-#define MSG_MOVE_START      0x3F
+#define MSG_BLANK           0x30
+#define MSG_PICS            0x31
+#define MSG_SHUTTER         0x32
+#define MSG_PROCESS         0x33
+#define MSG_SPEED           0x34
+#define MSG_DIRECTION       0x35
+#define MSG_SLIDE_LENGTH    0x36
+#define MSG_RADIUS          0x37
+#define MSG_ANG_STEP        0x38
+#define MSG_RUN             0x39
+#define MSG_ABORT           0x3A
+#define MSG_MOVE_HOME       0x3B
+#define MSG_MOVE_START      0x3C
+#define MSG_HEARTBEAT       0x3D
 
 #define MSG_TAKING_PIC      0x41
 #define MSG_MOVING          0x42
